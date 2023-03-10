@@ -1,10 +1,9 @@
-import {Col, Container, Row} from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import CustomersList from "./components/CustomersList";
 import React from "react";
+import {Route, Routes} from "react-router-dom";
+import {Card, Col, Container, Row} from "react-bootstrap";
+import CustomersList from "./components/CustomersList";
 import CustomerDetails from "./components/CustomerDetails";
-import {useSelector} from "react-redux";
-import {Customer} from "./models/customer";
 
 const customers = [
     {
@@ -28,18 +27,25 @@ const customers = [
 ]
 
 const App: React.FC = () => {
-    const currentCustomer: Customer = useSelector((state: { currentCustomerReducer: { value: Customer } }) => state.currentCustomerReducer.value)
+
     return (
-        <div>
-            <Container>
+        <Routes>
+            <Route path="/" element={<Container>
                 <h1 className="text-center">Menadżer Klientów</h1>
                 <Row>
                     <Col md="auto"><CustomersList customers={customers}/></Col>
-                    <Col><CustomerDetails customer={currentCustomer}/></Col>
+                    <Col><Card></Card></Col>
                 </Row>
-            </Container>
-
-        </div>
+            </Container>}></Route>
+            <Route path="/customers/:id"
+                   element={<Container>
+                       <h1 className="text-center">Menadżer Klientów</h1>
+                       <Row>
+                           <Col md="auto"><CustomersList customers={customers}/></Col>
+                           <Col><CustomerDetails customers={customers}/></Col>
+                       </Row>
+                   </Container>}></Route>
+        </Routes>
     );
 }
 
