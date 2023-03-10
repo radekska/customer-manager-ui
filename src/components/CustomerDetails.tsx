@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, Card} from "react-bootstrap";
+import {Button, Card, Col} from "react-bootstrap";
 import {Customer} from "../models/customer";
 import {useParams} from "react-router-dom";
 
@@ -14,16 +14,17 @@ const CustomerDetails: React.FC<CustomerDetailsProps> = (props) => {
     // TODO here I will call backend API for fetching customer details (no need to pass list of customers here)
 
     return (
-        <Card>
-            <Card.Body>
-                <Card.Title>{customer.first_name} {customer.last_name}</Card.Title>
-                <Card.Text>
-                    Telephone number: {customer.telephone_number}
-                </Card.Text>
-                <Button variant="primary">Go somewhere</Button>
-            </Card.Body>
-        </Card>
-
+        <Col>
+            <Card>
+                <Card.Body>
+                    <Card.Title>{customer.first_name} {customer.last_name}</Card.Title>
+                    <Card.Text>
+                        Telephone number: {customer.telephone_number}
+                    </Card.Text>
+                    <Button variant="primary">Go somewhere</Button>
+                </Card.Body>
+            </Card>
+        </Col>
     )
 }
 

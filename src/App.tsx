@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React from "react";
 import {Route, Routes} from "react-router-dom";
-import {Card, Col, Container, Row} from "react-bootstrap";
+import {Container, Row} from "react-bootstrap";
 import CustomersList from "./components/CustomersList";
 import CustomerDetails from "./components/CustomerDetails";
 
@@ -29,23 +29,16 @@ const customers = [
 const App: React.FC = () => {
 
     return (
-        <Routes>
-            <Route path="/" element={<Container>
-                <h1 className="text-center">Menadżer Klientów</h1>
-                <Row>
-                    <Col md="auto"><CustomersList customers={customers}/></Col>
-                    <Col><Card></Card></Col>
-                </Row>
-            </Container>}></Route>
-            <Route path="/customers/:id"
-                   element={<Container>
-                       <h1 className="text-center">Menadżer Klientów</h1>
-                       <Row>
-                           <Col md="auto"><CustomersList customers={customers}/></Col>
-                           <Col><CustomerDetails customers={customers}/></Col>
-                       </Row>
-                   </Container>}></Route>
-        </Routes>
+        <div>
+            <h1 className="text-center">Menadżer Klientów</h1>
+            <Routes>
+                <Route path="/"
+                       element={<Container><Row><CustomersList customers={customers}/></Row></Container>}></Route>
+                <Route path="/customers/:id"
+                       element={<Container><Row><CustomersList customers={customers}/><CustomerDetails
+                           customers={customers}/></Row></Container>}></Route>
+            </Routes>
+        </div>
     );
 }
 
