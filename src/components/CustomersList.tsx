@@ -1,22 +1,31 @@
-import React, {useEffect, useState} from "react";
+import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
 import {Button, Col, Form, ListGroup, Stack} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import {Customer} from "../models/customer";
 import axios from "axios";
 
+interface CustomersListProps {
+    customerDeleted: boolean
+    setCustomerDeleted: Dispatch<SetStateAction<boolean>>
 
-const CustomersList: React.FC = () => {
+}
+
+
+const CustomersList: React.FC<CustomersListProps> = (props) => {
     function handleSubmit(event: React.FormEvent) {
         event.preventDefault()
     }
 
     const [customers, setCustomers] = useState<Customer[]>([]);
+    const setCustomerDeleted = props.setCustomerDeleted
+    let customerDeleted = props.customerDeleted
 
     useEffect(() => {
         axios.get('http://localhost:8080/api/customers').then(
             response => setCustomers(response.data)
         )
-    }, [true]);
+        setCustomerDeleted(false)
+    }, [setCustomerDeleted, customerDeleted]);
 
 
     return (
@@ -37,7 +46,7 @@ const CustomersList: React.FC = () => {
                     )}
                 </ListGroup>
 
-                <Link to="/customer/add"><Button variant="success">Dodaj</Button></Link>
+                <Link to="/customer/add"><Button variant="success">Dodaj klienta</Button></Link>
             </Stack>
         </Col>
     );

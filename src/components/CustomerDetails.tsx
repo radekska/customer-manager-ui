@@ -1,11 +1,16 @@
-import React, {useEffect, useState} from "react";
-import {Button, Card, Col} from "react-bootstrap";
+import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
+import {Card, Col} from "react-bootstrap";
 import {useParams} from "react-router-dom";
 import axios from "axios";
 import {Customer} from "../models/customer";
+import DeleteCustomer from "./DeleteCustomer";
+
+interface CustomerDetailsProps {
+    setCustomerDeleted: Dispatch<SetStateAction<boolean>>
+}
 
 
-const CustomerDetails: React.FC = () => {
+const CustomerDetails: React.FC<CustomerDetailsProps> = (props) => {
     const customerId = useParams().id!
 
     const [customer, setCustomer] = useState<Customer>({first_name: "", id: "", last_name: "", telephone_number: ""});
@@ -22,7 +27,7 @@ const CustomerDetails: React.FC = () => {
                     <Card.Text>
                         Numer telefonu: {customer.telephone_number}
                     </Card.Text>
-                    <Button variant="primary">Go somewhere</Button>
+                    <DeleteCustomer setCustomerDeleted={props.setCustomerDeleted}/>
                 </Card.Body>
             </Card>
         </Col>
