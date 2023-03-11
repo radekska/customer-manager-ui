@@ -1,31 +1,20 @@
-import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
+import React from "react";
 import {Button, Col, Form, ListGroup, Stack} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import {Customer} from "../models/customer";
-import axios from "axios";
-
-interface CustomersListProps {
-    customerDeleted: boolean
-    setCustomerDeleted: Dispatch<SetStateAction<boolean>>
-
-}
+import {useSelector} from "react-redux";
 
 
-const CustomersList: React.FC<CustomersListProps> = (props) => {
+const selectCustomers = (state: { customers: Customer[]; }) => state.customers
+
+
+const CustomersList: React.FC = () => {
     function handleSubmit(event: React.FormEvent) {
         event.preventDefault()
     }
 
-    const [customers, setCustomers] = useState<Customer[]>([]);
-    const setCustomerDeleted = props.setCustomerDeleted
-    let customerDeleted = props.customerDeleted
 
-    useEffect(() => {
-        axios.get('http://localhost:8080/api/customers').then(
-            response => setCustomers(response.data)
-        )
-        setCustomerDeleted(false)
-    }, [setCustomerDeleted, customerDeleted]);
+    const customers = useSelector(selectCustomers)
 
 
     return (

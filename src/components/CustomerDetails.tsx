@@ -5,12 +5,9 @@ import axios from "axios";
 import {Customer} from "../models/customer";
 import DeleteCustomer from "./DeleteCustomer";
 
-interface CustomerDetailsProps {
-    setCustomerDeleted: Dispatch<SetStateAction<boolean>>
-}
 
 
-const CustomerDetails: React.FC<CustomerDetailsProps> = (props) => {
+const CustomerDetails: React.FC = (props) => {
     const customerId = useParams().id!
 
     const [customer, setCustomer] = useState<Customer>({first_name: "", id: "", last_name: "", telephone_number: ""});
@@ -27,7 +24,7 @@ const CustomerDetails: React.FC<CustomerDetailsProps> = (props) => {
                     <Card.Text>
                         Numer telefonu: {customer.telephone_number}
                     </Card.Text>
-                    <DeleteCustomer setCustomerDeleted={props.setCustomerDeleted}/>
+                    <DeleteCustomer/>
                 </Card.Body>
             </Card>
         </Col>
