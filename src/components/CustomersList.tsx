@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Col, Form, ListGroup} from "react-bootstrap";
+import {Button, Col, Form, ListGroup, Stack} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import {Customer} from "../models/customer";
 import axios from "axios";
@@ -16,25 +16,29 @@ const CustomersList: React.FC = () => {
         axios.get('http://localhost:8080/api/customers').then(
             response => setCustomers(response.data)
         )
-    },[true]);
+    }, [true]);
 
 
     return (
         <Col md="auto">
-            <Form onSubmit={handleSubmit}>
-                <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                    <Form.Label>Znajdź Klienta</Form.Label>
-                    <Form.Control type="attributes" placeholder="imię, nazwisko"/>
-                </Form.Group>
-            </Form>
-            <ListGroup>
-                {customers.map(customer =>
-                    <Link to={`/customers/${customer.id}`} key={customer.id}>
-                        <ListGroup.Item action>{customer.first_name} {customer.last_name}
-                        </ListGroup.Item>
-                    </Link>
-                )}
-            </ListGroup>
+            <Stack gap={3}>
+                <Form onSubmit={handleSubmit}>
+                    <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                        <Form.Label>Znajdź Klienta</Form.Label>
+                        <Form.Control type="attributes" placeholder="imię, nazwisko"/>
+                    </Form.Group>
+                </Form>
+                <ListGroup>
+                    {customers.map(customer =>
+                        <Link to={`/customers/${customer.id}`} key={customer.id}>
+                            <ListGroup.Item action>{customer.first_name} {customer.last_name}
+                            </ListGroup.Item>
+                        </Link>
+                    )}
+                </ListGroup>
+
+                <Link to="/customer/add"><Button variant="success">Dodaj</Button></Link>
+            </Stack>
         </Col>
     );
 }
