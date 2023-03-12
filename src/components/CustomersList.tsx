@@ -1,8 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {Button, Col, Form, ListGroup, Stack} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import {Customer} from "../models/customer";
-import axios from "axios";
+import {useSelector} from "react-redux";
+
+
+const selectCustomers = (state: { customers: Customer[]; }) => state.customers
 
 
 const CustomersList: React.FC = () => {
@@ -10,13 +13,8 @@ const CustomersList: React.FC = () => {
         event.preventDefault()
     }
 
-    const [customers, setCustomers] = useState<Customer[]>([]);
 
-    useEffect(() => {
-        axios.get('http://localhost:8080/api/customers').then(
-            response => setCustomers(response.data)
-        )
-    }, [true]);
+    const customers = useSelector(selectCustomers)
 
 
     return (
@@ -37,7 +35,7 @@ const CustomersList: React.FC = () => {
                     )}
                 </ListGroup>
 
-                <Link to="/customer/add"><Button variant="success">Dodaj</Button></Link>
+                <Link to="/customer/add"><Button variant="success">Dodaj klienta</Button></Link>
             </Stack>
         </Col>
     );

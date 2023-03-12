@@ -1,18 +1,21 @@
-import React, {useEffect, useState} from "react";
-import {Button, Card, Col} from "react-bootstrap";
+import React from "react";
+import {Alert, Card, Col} from "react-bootstrap";
 import {useParams} from "react-router-dom";
-import axios from "axios";
 import {Customer} from "../models/customer";
+import DeleteCustomer from "./DeleteCustomer";
+import {useSelector} from "react-redux";
 
+function selectCustomerById(customerId: string) {
+    return (state: { customers: Customer[]; }) => state.customers.find(customer => customer.id === customerId)
+}
 
 const CustomerDetails: React.FC = () => {
     const customerId = useParams().id!
+    const customer = useSelector(selectCustomerById(customerId))
 
-    const [customer, setCustomer] = useState<Customer>({first_name: "", id: "", last_name: "", telephone_number: ""});
-    useEffect(() => {
-        axios.get(`http://localhost:8080/api/customers/${customerId}`).then(response => setCustomer(response.data))
-    }, [customerId]);
-
+    if (typeof customer === "undefined") {
+        return <Col><Card><Card.Body><Card.Title><Alert variant="warning">Klient nieznaleziony</Alert></Card.Title> </Card.Body></Card></Col>
+    }
 
     return (
         <Col>
@@ -22,7 +25,7 @@ const CustomerDetails: React.FC = () => {
                     <Card.Text>
                         Numer telefonu: {customer.telephone_number}
                     </Card.Text>
-                    <Button variant="primary">Go somewhere</Button>
+                    <DeleteCustomer/>
                 </Card.Body>
             </Card>
         </Col>

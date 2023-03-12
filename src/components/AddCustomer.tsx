@@ -1,8 +1,9 @@
 import React, {useRef, useState} from "react";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import axios from "axios";
 import {Alert, Container} from "react-bootstrap";
+import {addCustomer} from "../reducers/root";
+import {useDispatch} from "react-redux";
 
 const AddCustomer: React.FC = () => {
     const [showSuccessfulLabel, setShowSuccessfulLabel] = useState(false)
@@ -12,6 +13,7 @@ const AddCustomer: React.FC = () => {
     const lastNameInputRef = useRef<HTMLInputElement>(null)
     const telephoneNumberInputRef = useRef<HTMLInputElement>(null)
 
+    const dispatch = useDispatch()
     const clearInputFields = () => {
         firstNameInputRef.current!.value = ""
         lastNameInputRef.current!.value = ""
@@ -25,21 +27,10 @@ const AddCustomer: React.FC = () => {
         const lastName = lastNameInputRef.current!.value
         const telephoneNumber = telephoneNumberInputRef.current!.value
 
-        axios.post("http://localhost:8080/api/customers", {
-            first_name: firstName,
-            last_name: lastName,
-            telephone_number: telephoneNumber
-        }).then(() => {
-            setShowSuccessfulLabel(true);
-            setShowErrorLabel(false);
-            clearInputFields();
-
-        }).catch(err => {
-            setShowErrorLabel(true);
-            setShowSuccessfulLabel(false)
-        })
-        // TODO - error handling
-
+        const addCustomerThunk = addCustomer(firstName, lastName, telephoneNumber)
+        // @ts-ignore
+        dispatch(addCustomerThunk)
+        clearInputFields()
     }
 
 

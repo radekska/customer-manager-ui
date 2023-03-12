@@ -1,13 +1,12 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React from "react";
 import {Link, Route, Routes} from "react-router-dom";
-import {Button, Col, Container, Nav, Navbar, Row} from "react-bootstrap";
+import {Container, Navbar, Row} from "react-bootstrap";
 import CustomersList from "./components/CustomersList";
 import CustomerDetails from "./components/CustomerDetails";
 import AddCustomer from "./components/AddCustomer";
 
 const App: React.FC = () => {
-
     return (
         <Container>
             <Row>
