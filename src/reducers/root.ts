@@ -9,7 +9,7 @@ interface Customer {
     updated_at: string
 }
 
-const initialState = {
+const initialState: { customers: Customer[] } = {
     customers: []
 }
 
@@ -70,7 +70,10 @@ export default function rootReducer(state = initialState, action: any) {
             }
         case "customers/customerDeleted":
             console.log(state, action)
-            return state
+            return {
+                ...state,
+                customers: state.customers.filter(customer => customer.id !== action.payload)
+            }
         default:
             return state
     }

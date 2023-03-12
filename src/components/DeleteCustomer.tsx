@@ -6,17 +6,17 @@ import {useDispatch} from "react-redux";
 
 
 const DeleteCustomer: React.FC = () => {
-    const customerId = useParams().id
+    const customerId = useParams().id!
     const dispatch = useDispatch()
 
     const deleteCustomerHandler = (event: React.MouseEvent<HTMLButtonElement>, customerId: string) => {
         event.preventDefault()
         const deleteCustomerThunk = deleteCustomer(customerId)
+        // @ts-ignore
         dispatch(deleteCustomerThunk)
     }
 
-    // TODO how to pass additional argument to on click handler?
-    return <Button variant="danger" onClick={() => {deleteCustomerHandler(customerId)}}>Usuń klienta</Button>
+    return <Button variant="danger" onClick={(event) => {deleteCustomerHandler(event,customerId)}}>Usuń klienta</Button>
 }
 
 export default DeleteCustomer
