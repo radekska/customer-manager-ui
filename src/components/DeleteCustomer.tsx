@@ -1,19 +1,22 @@
-import axios from "axios";
-import React, {Dispatch, SetStateAction} from "react";
+import React from "react";
 import {Button} from "react-bootstrap";
 import {useParams} from "react-router-dom";
+import {deleteCustomer} from "../reducers/root";
+import {useDispatch} from "react-redux";
 
 
 const DeleteCustomer: React.FC = () => {
     const customerId = useParams().id
-    const deleteCustomerHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const dispatch = useDispatch()
+
+    const deleteCustomerHandler = (event: React.MouseEvent<HTMLButtonElement>, customerId: string) => {
         event.preventDefault()
-        axios.delete(`http://localhost:8080/api/customers/${customerId}`).then(response => {
-            console.log(response);
-        }).catch(err => console.log(err))
+        const deleteCustomerThunk = deleteCustomer(customerId)
+        dispatch(deleteCustomerThunk)
     }
 
-    return <Button variant="danger" onClick={deleteCustomerHandler}>Usuń klienta</Button>
+    // TODO how to pass additional argument to on click handler?
+    return <Button variant="danger" onClick={() => {deleteCustomerHandler(customerId)}}>Usuń klienta</Button>
 }
 
 export default DeleteCustomer
