@@ -1,5 +1,5 @@
 import React from "react";
-import {Card, Col} from "react-bootstrap";
+import {Alert, Card, Col} from "react-bootstrap";
 import {useParams} from "react-router-dom";
 import {Customer} from "../models/customer";
 import DeleteCustomer from "./DeleteCustomer";
@@ -14,7 +14,7 @@ const CustomerDetails: React.FC = () => {
     const customer = useSelector(selectCustomerById(customerId))
 
     if (typeof customer === "undefined") {
-        return <Col><Card> <Card.Body><Card.Title>Klient nieznaleziony</Card.Title> </Card.Body></Card></Col>
+        return <Col><Card><Card.Body><Card.Title><Alert variant="warning">Klient nieznaleziony</Alert></Card.Title> </Card.Body></Card></Col>
     }
 
     return (
