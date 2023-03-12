@@ -31,22 +31,6 @@ const AddCustomer: React.FC = () => {
         // @ts-ignore
         dispatch(addCustomerThunk)
         clearInputFields()
-
-        // axios.post("http://localhost:8080/api/customers", {
-        //     first_name: firstName,
-        //     last_name: lastName,
-        //     telephone_number: telephoneNumber
-        // }).then(() => {
-        //     setShowSuccessfulLabel(true);
-        //     setShowErrorLabel(false);
-        //     clearInputFields();
-        //
-        // }).catch(err => {
-        //     setShowErrorLabel(true);
-        //     setShowSuccessfulLabel(false)
-        // })
-        // TODO - error handling
-
     }
 
 
