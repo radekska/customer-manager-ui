@@ -1,13 +1,13 @@
-import React, {useRef, useState} from "react";
+import React, {useRef} from "react";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import {Alert, Container} from "react-bootstrap";
-import {addCustomer} from "../reducers/root";
-import {useDispatch} from "react-redux";
+import {addCustomer, CustomerAddStatus, State} from "../reducers/root";
+import {useDispatch, useSelector} from "react-redux";
+
+const selectAddStatus = (state: State) => state.customers.customerAddStatus
 
 const AddCustomer: React.FC = () => {
-    const [showSuccessfulLabel, setShowSuccessfulLabel] = useState(false)
-    const [showErrorLabel, setShowErrorLabel] = useState(false)
 
     const firstNameInputRef = useRef<HTMLInputElement>(null)
     const lastNameInputRef = useRef<HTMLInputElement>(null)
@@ -33,11 +33,23 @@ const AddCustomer: React.FC = () => {
         clearInputFields()
     }
 
+    const addStatus = useSelector(selectAddStatus)
+    const showErrorLabel = () => {
+        if (addStatus === CustomerAddStatus.FAILED) {
+            return <Alert key="danger" variant="danger">Wystąpił błąd w dodawaniu klienta</Alert>
+        }
+    }
+    const showSuccessfulLabel = () => {
+        if (addStatus === CustomerAddStatus.SUCCESS) {
+            return <Alert key="success" variant="success">Klient został dodany poprawnie</Alert>
+        }
+    }
+
 
     return (
         <Container>
-            {showSuccessfulLabel && <Alert key="success" variant="success">Klient został dodany poprawnie</Alert>}
-            {showErrorLabel && <Alert key="danger" variant="danger">Wystąpił błąd w dodawaniu klienta</Alert>}
+            {showErrorLabel()}
+            {showSuccessfulLabel()}
             <Form onSubmit={addCustomerHandler}>
                 <Form.Group className="mb-3">
                     <Form.Label>Imię</Form.Label>
