@@ -1,3 +1,7 @@
 a {
     text-decoration: none;
 }
+
+.list-customers-loading-spinner {
+    margin: auto;
+}

@@ -1,11 +1,12 @@
 import React from "react";
-import {Button, Col, Form, ListGroup, Stack} from "react-bootstrap";
+import {Button, Col, Form, ListGroup, Spinner, Stack} from "react-bootstrap";
 import {Link} from "react-router-dom";
-import {Customer} from "../models/customer";
 import {useSelector} from "react-redux";
+import {CustomerListStatus, State} from "../reducers/root";
 
 
-const selectCustomers = (state: { customers: Customer[]; }) => state.customers
+const selectCustomers = (state: State) => state.customers.entities
+const selectListStatus = (state: State) => state.customers.customerListStatus
 
 
 const CustomersList: React.FC = () => {
@@ -15,6 +16,14 @@ const CustomersList: React.FC = () => {
 
 
     const customers = useSelector(selectCustomers)
+    const listStatus = useSelector(selectListStatus)
+
+
+    function renderLoader() {
+        if (listStatus === CustomerListStatus.LOADING) {
+            return <Spinner animation="border" className="list-customers-loading-spinner"/>
+        }
+    }
 
 
     return (
@@ -27,6 +36,7 @@ const CustomersList: React.FC = () => {
                     </Form.Group>
                 </Form>
                 <ListGroup>
+                    {renderLoader()}
                     {customers.map(customer =>
                         <Link to={`/customers/${customer.id}`} key={customer.id}>
                             <ListGroup.Item action>{customer.first_name} {customer.last_name}
