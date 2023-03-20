@@ -1,7 +1,8 @@
 import React, {useRef} from "react";
-import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import {Alert, Container} from "react-bootstrap";
+import {Container} from "react-bootstrap";
+import Alert from '@mui/material/Alert'
+import Button from '@mui/material/Button';
 import {addCustomer, CustomerAddStatus, State} from "../reducers/root";
 import {useDispatch, useSelector} from "react-redux";
 
@@ -36,12 +37,12 @@ const AddCustomer: React.FC = () => {
     const addStatus = useSelector(selectAddStatus)
     const showErrorLabel = () => {
         if (addStatus === CustomerAddStatus.FAILED) {
-            return <Alert key="danger" variant="danger">Wystąpił błąd w dodawaniu klienta</Alert>
+            return <Alert key="danger" severity="error">Wystąpił błąd w dodawaniu klienta</Alert>
         }
     }
     const showSuccessfulLabel = () => {
         if (addStatus === CustomerAddStatus.SUCCESS) {
-            return <Alert key="success" variant="success">Klient został dodany poprawnie</Alert>
+            return <Alert key="success" severity="success">Klient został dodany poprawnie</Alert>
         }
     }
 
@@ -64,7 +65,7 @@ const AddCustomer: React.FC = () => {
                     <Form.Control type="text" placeholder="Numer telefonu" id="telephoneNumer"
                                   ref={telephoneNumberInputRef}/>
                 </Form.Group>
-                <Button variant="success" type="submit">
+                <Button variant="contained" color="success" size="medium" type="submit">
                     Dodaj
                 </Button>
             </Form>

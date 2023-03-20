@@ -1,8 +1,9 @@
 import React from "react";
-import {Button, Col, Form, ListGroup, Spinner, Stack} from "react-bootstrap";
+import {Col, Form, ListGroup, Spinner, Stack} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {CustomerListStatus, State} from "../reducers/root";
+import Button from "@mui/material/Button";
 
 
 const selectCustomers = (state: State) => state.customers.entities
@@ -45,7 +46,7 @@ const CustomersList: React.FC = () => {
                     )}
                 </ListGroup>
 
-                <Link to="/customer/add"><Button variant="success">Dodaj klienta</Button></Link>
+                <Link to="/customer/add"><Button variant="contained" color="success">Dodaj klienta</Button></Link>
             </Stack>
         </Col>
     );
