@@ -3,7 +3,7 @@ import {Card, Col} from "react-bootstrap";
 import {useParams} from "react-router-dom";
 import DeleteCustomer from "./DeleteCustomer";
 import {useSelector} from "react-redux";
-import {State} from "../reducers/root";
+import {State} from "../redux/reducers/root";
 import PurchasesTable from "./PurchasesTable";
 import Alert from "@mui/material/Alert";
 

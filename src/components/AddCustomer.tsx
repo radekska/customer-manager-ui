@@ -3,8 +3,9 @@ import Form from 'react-bootstrap/Form';
 import {Card, Container} from "react-bootstrap";
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button';
-import {addCustomer, CustomerAddStatus, State} from "../reducers/root";
+import {CustomerAddStatus, State} from "../redux/reducers/root";
 import {useDispatch, useSelector} from "react-redux";
+import {addCustomer} from "../redux/reducers/customers";
 
 const selectAddStatus = (state: State) => state.customers.customerAddStatus
 

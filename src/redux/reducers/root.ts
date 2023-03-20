@@ -1,13 +1,5 @@
-import axios from "axios";
-
-interface Customer {
-    id: string
-    first_name: string
-    last_name: string
-    telephone_number: string
-    created_at: string
-    updated_at: string
-}
+import {Customer} from "../../models/customer";
+import {Purchase} from "../../models/purchase";
 
 export enum CustomerAddStatus {
     IDLE = "idle",
@@ -22,7 +14,9 @@ export enum CustomerListStatus {
     FAILED = "failed",
 }
 
-export type State = { customers: { entities: Customer[], customerListStatus: CustomerListStatus, customerAddStatus: CustomerAddStatus } }
+type CustomersState = { entities: Customer[], customerListStatus: CustomerListStatus, customerAddStatus: CustomerAddStatus }
+type PurchasesState = { entities: Purchase[] }
+export type State = { customers: CustomersState, purchases: PurchasesState }
 
 
 const initialState: State = {
@@ -30,56 +24,9 @@ const initialState: State = {
         entities: [],
         customerListStatus: CustomerListStatus.IDLE,
         customerAddStatus: CustomerAddStatus.IDLE,
-    }
-}
-
-export async function listCustomers(dispatch: any, getState: any) {
-    dispatch({type: "customers/customersLoading"})
-    axios.get<Customer[]>('http://localhost:8080/api/customers').then(response => dispatch({
-        type: "customers/customersLoaded",
-        payload: response.data
-    })).catch((error) => dispatch({
-        type: "customers/customersLoadingFailed",
-        payload: error
-    }))
-
-}
-
-export function addCustomer(firstName: string, lastName: string, telephoneNumber: string) {
-    return async function addCustomerThunk(dispatch: any, getState: any) {
-        dispatch({type: "customers/customerAdding"})
-        axios.post<Customer>("http://localhost:8080/api/customers", {
-            first_name: firstName,
-            last_name: lastName,
-            telephone_number: telephoneNumber
-        }).then(response => {
-            dispatch({
-                type: "customers/customerAddingSuccess",
-                payload: response.data
-            })
-            setTimeout(() => dispatch({
-                type: "customers/customerAddIdle",
-            }), 5000)
-        }).catch(() => {
-            dispatch({
-                type: "customers/customerAddingFailed"
-            })
-            setTimeout(() => dispatch({
-                type: "customers/customerAddIdle",
-            }), 5000)
-        })
-
-    }
-}
-
-export function deleteCustomer(customerId: string) {
-    return async function deleteCustomerThunk(dispatch: any, getState: any) {
-        // FIXME what if request go wrong?
-        await axios.delete(`http://localhost:8080/api/customers/${customerId}`)
-        dispatch({
-            type: "customers/customerDeleted",
-            payload: customerId
-        })
+    },
+    purchases: {
+        entities: []
     }
 }
 
@@ -119,6 +66,7 @@ export default function rootReducer(state = initialState, action: any) {
         case "customers/customerAddIdle":
             console.log(state, action)
             return {
+                ...state,
                 customers: {
                     entities: [...state.customers.entities],
                     customerAddStatus: CustomerAddStatus.IDLE,
@@ -128,6 +76,7 @@ export default function rootReducer(state = initialState, action: any) {
         case "customers/customerAdding":
             console.log(state, action)
             return {
+                ...state,
                 customers: {
                     entities: [...state.customers.entities],
                     customerAddStatus: CustomerAddStatus.ADDING,
@@ -137,6 +86,7 @@ export default function rootReducer(state = initialState, action: any) {
         case "customers/customerAddingFailed":
             console.log(state, action)
             return {
+                ...state,
                 customers: {
                     entities: [...state.customers.entities],
                     customerAddStatus: CustomerAddStatus.FAILED,
@@ -146,6 +96,7 @@ export default function rootReducer(state = initialState, action: any) {
         case "customers/customerAddingSuccess":
             console.log(state, action)
             return {
+                ...state,
                 customers: {
                     entities: [
                         ...state.customers.entities,
@@ -163,11 +114,18 @@ export default function rootReducer(state = initialState, action: any) {
         case "customers/customerDeleted":
             console.log(state, action)
             return {
+                ...state,
                 customers: {
                     entities: state.customers.entities.filter(customer => customer.id !== action.payload),
                     customerAddStatus: state.customers.customerAddStatus,
                     customerListStatus: state.customers.customerListStatus
                 }
+            }
+        case "purchases/purchasesLoaded":
+            console.log(state, action)
+            return {
+                ...state,
+                purchases: {entities: action.payload}
             }
         default:
             return state
