@@ -4,7 +4,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {State} from "../redux/reducers/root";
 import {useParams} from "react-router-dom";
 import {listPurchases, PurchasesListStatus} from "../redux/reducers/purchases";
-import {Box, CircularProgress} from "@mui/material";
 
 const columns: GridColDef[] = [
     {field: 'frame_model', headerName: 'Model Oprawki', width: 150, editable: true,},
@@ -38,10 +37,6 @@ const PurchasesTable: React.FC = () => {
     const purchases = useSelector(selectPurchases)
     const listStatus = useSelector(selectListStatus)
 
-    if (listStatus === PurchasesListStatus.LOADING) {
-        return <Box sx={{display: 'flex'}}><CircularProgress className="list-customers-loading-spinner"/></Box>
-    }
-
 
     return (
         <div style={{height: 400, width: '100%'}}>
@@ -49,6 +44,10 @@ const PurchasesTable: React.FC = () => {
                 rows={purchases}
                 columns={columns}
                 checkboxSelection
+                editMode="row"
+                loading={(() => {
+                    return listStatus === PurchasesListStatus.LOADING
+                })()}
             />
         </div>
     );
