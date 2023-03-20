@@ -1,10 +1,9 @@
 import React from "react";
-import {Col, Form, ListGroup, Spinner, Stack} from "react-bootstrap";
+import {Card, Col, Form, ListGroup, Spinner, Stack} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {CustomerListStatus, State} from "../reducers/root";
 import Button from "@mui/material/Button";
-import {Card, CardActions, CardContent} from "@mui/material";
 
 
 const selectCustomers = (state: State) => state.customers.entities
@@ -30,8 +29,8 @@ const CustomersList: React.FC = () => {
 
     return (
         <Col md="auto">
-            <Card >
-                <CardContent>
+            <Card>
+                <Card.Body>
                     <Stack gap={3}>
                         <Form onSubmit={handleSubmit}>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
@@ -48,13 +47,12 @@ const CustomersList: React.FC = () => {
                                 </Link>
                             )}
                         </ListGroup>
-
-                        <CardActions>
-                            <Link to="/customer/add"><Button variant="contained" color="success">Dodaj
-                                klienta</Button></Link>
-                        </CardActions>
                     </Stack>
-                </CardContent>
+                </Card.Body>
+                <Card.Footer>
+                    <Link to="/customer/add"><Button variant="contained" color="success">Dodaj
+                        klienta</Button></Link>
+                </Card.Footer>
             </Card>
         </Col>
     );

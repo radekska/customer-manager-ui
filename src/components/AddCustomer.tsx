@@ -1,12 +1,10 @@
 import React, {useRef} from "react";
 import Form from 'react-bootstrap/Form';
-import {Container} from "react-bootstrap";
+import {Card, Container} from "react-bootstrap";
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button';
 import {addCustomer, CustomerAddStatus, State} from "../reducers/root";
 import {useDispatch, useSelector} from "react-redux";
-import Card from "@mui/material/Card";
-import {CardContent} from "@mui/material";
 
 const selectAddStatus = (state: State) => state.customers.customerAddStatus
 
@@ -51,11 +49,12 @@ const AddCustomer: React.FC = () => {
 
     return (
         <Container>
-            {showErrorLabel()}
-            {showSuccessfulLabel()}
             <Card>
-                <CardContent>
-                    <Form onSubmit={addCustomerHandler}>
+                {showErrorLabel()}
+                {showSuccessfulLabel()}
+                <Card.Header>Dodaj nowego klienta</Card.Header>
+                <Form onSubmit={addCustomerHandler}>
+                    <Card.Body>
                         <Form.Group className="mb-3">
                             <Form.Label>Imię</Form.Label>
                             <Form.Control type="text" placeholder="Imię" id="firstName" ref={firstNameInputRef}/>
@@ -69,11 +68,13 @@ const AddCustomer: React.FC = () => {
                             <Form.Control type="text" placeholder="Numer telefonu" id="telephoneNumer"
                                           ref={telephoneNumberInputRef}/>
                         </Form.Group>
+                    </Card.Body>
+                    <Card.Footer>
                         <Button variant="contained" color="success" size="medium" type="submit">
                             Dodaj
                         </Button>
-                    </Form>
-                </CardContent>
+                    </Card.Footer>
+                </Form>
             </Card>
         </Container>
     );
