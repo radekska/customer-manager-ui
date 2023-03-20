@@ -1,10 +1,11 @@
 import React from "react";
-import {Alert, Card, Col} from "react-bootstrap";
+import {Card, Col} from "react-bootstrap";
 import {useParams} from "react-router-dom";
 import DeleteCustomer from "./DeleteCustomer";
 import {useSelector} from "react-redux";
 import {State} from "../reducers/root";
-import DataTable from "./PurchasesTable";
+import PurchasesTable from "./PurchasesTable";
+import Alert from "@mui/material/Alert";
 
 function selectCustomerById(customerId: string) {
     return (state: State) => state.customers.entities.find(customer => customer.id === customerId)
@@ -15,7 +16,7 @@ const CustomerDetails: React.FC = () => {
     const customer = useSelector(selectCustomerById(customerId))
 
     if (typeof customer === "undefined") {
-        return <Col><Card><Card.Body><Card.Title><Alert variant="warning">Klient nieznaleziony</Alert></Card.Title>
+        return <Col><Card><Card.Body><Card.Title><Alert severity="warning">Klient nieznaleziony</Alert></Card.Title>
         </Card.Body></Card></Col>
     }
 
@@ -33,7 +34,7 @@ const CustomerDetails: React.FC = () => {
                 </Card.Body>
                 <Card.Body>
                     <Card.Title>Zakupy</Card.Title>
-                    <DataTable/>
+                    <PurchasesTable/>
                 </Card.Body>
                 <Card.Footer><DeleteCustomer/></Card.Footer>
             </Card>
