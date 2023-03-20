@@ -4,6 +4,7 @@ import {Link} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {CustomerListStatus, State} from "../reducers/root";
 import Button from "@mui/material/Button";
+import {Card, CardActions, CardContent} from "@mui/material";
 
 
 const selectCustomers = (state: State) => state.customers.entities
@@ -29,25 +30,32 @@ const CustomersList: React.FC = () => {
 
     return (
         <Col md="auto">
-            <Stack gap={3}>
-                <Form onSubmit={handleSubmit}>
-                    <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                        <Form.Label>Znajdź Klienta</Form.Label>
-                        <Form.Control type="attributes" placeholder="imię, nazwisko"/>
-                    </Form.Group>
-                </Form>
-                <ListGroup>
-                    {renderLoader()}
-                    {customers.map(customer =>
-                        <Link to={`/customers/${customer.id}`} key={customer.id}>
-                            <ListGroup.Item action>{customer.first_name} {customer.last_name}
-                            </ListGroup.Item>
-                        </Link>
-                    )}
-                </ListGroup>
+            <Card >
+                <CardContent>
+                    <Stack gap={3}>
+                        <Form onSubmit={handleSubmit}>
+                            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                                <Form.Label>Znajdź Klienta</Form.Label>
+                                <Form.Control type="attributes" placeholder="imię, nazwisko"/>
+                            </Form.Group>
+                        </Form>
+                        <ListGroup>
+                            {renderLoader()}
+                            {customers.map(customer =>
+                                <Link to={`/customers/${customer.id}`} key={customer.id}>
+                                    <ListGroup.Item action>{customer.first_name} {customer.last_name}
+                                    </ListGroup.Item>
+                                </Link>
+                            )}
+                        </ListGroup>
 
-                <Link to="/customer/add"><Button variant="contained" color="success">Dodaj klienta</Button></Link>
-            </Stack>
+                        <CardActions>
+                            <Link to="/customer/add"><Button variant="contained" color="success">Dodaj
+                                klienta</Button></Link>
+                        </CardActions>
+                    </Stack>
+                </CardContent>
+            </Card>
         </Col>
     );
 }

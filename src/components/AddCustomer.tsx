@@ -5,6 +5,8 @@ import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button';
 import {addCustomer, CustomerAddStatus, State} from "../reducers/root";
 import {useDispatch, useSelector} from "react-redux";
+import Card from "@mui/material/Card";
+import {CardContent} from "@mui/material";
 
 const selectAddStatus = (state: State) => state.customers.customerAddStatus
 
@@ -51,24 +53,28 @@ const AddCustomer: React.FC = () => {
         <Container>
             {showErrorLabel()}
             {showSuccessfulLabel()}
-            <Form onSubmit={addCustomerHandler}>
-                <Form.Group className="mb-3">
-                    <Form.Label>Imię</Form.Label>
-                    <Form.Control type="text" placeholder="Imię" id="firstName" ref={firstNameInputRef}/>
-                </Form.Group>
-                <Form.Group className="mb-3">
-                    <Form.Label>Nazwisko</Form.Label>
-                    <Form.Control type="text" placeholder="Nazwisko" id="lastName" ref={lastNameInputRef}/>
-                </Form.Group>
-                <Form.Group className="mb-3">
-                    <Form.Label>Numer telefonu</Form.Label>
-                    <Form.Control type="text" placeholder="Numer telefonu" id="telephoneNumer"
-                                  ref={telephoneNumberInputRef}/>
-                </Form.Group>
-                <Button variant="contained" color="success" size="medium" type="submit">
-                    Dodaj
-                </Button>
-            </Form>
+            <Card>
+                <CardContent>
+                    <Form onSubmit={addCustomerHandler}>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Imię</Form.Label>
+                            <Form.Control type="text" placeholder="Imię" id="firstName" ref={firstNameInputRef}/>
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Nazwisko</Form.Label>
+                            <Form.Control type="text" placeholder="Nazwisko" id="lastName" ref={lastNameInputRef}/>
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Numer telefonu</Form.Label>
+                            <Form.Control type="text" placeholder="Numer telefonu" id="telephoneNumer"
+                                          ref={telephoneNumberInputRef}/>
+                        </Form.Group>
+                        <Button variant="contained" color="success" size="medium" type="submit">
+                            Dodaj
+                        </Button>
+                    </Form>
+                </CardContent>
+            </Card>
         </Container>
     );
 }
