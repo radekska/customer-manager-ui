@@ -1,10 +1,11 @@
 import React from "react";
-import {Card, Col, Form, ListGroup, Spinner, Stack} from "react-bootstrap";
+import {Card, Col, Form, ListGroup, Stack} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import {useSelector} from "react-redux";
 import Button from "@mui/material/Button";
-import { State } from "../redux/reducers/root";
+import {State} from "../redux/reducers/root";
 import {CustomerListStatus} from "../redux/reducers/customers";
+import {CircularProgress} from "@mui/material";
 
 
 const selectCustomers = (state: State) => state.customers.entities
@@ -23,7 +24,7 @@ const CustomersList: React.FC = () => {
 
     function renderLoader() {
         if (listStatus === CustomerListStatus.LOADING) {
-            return <Spinner animation="border" className="list-customers-loading-spinner"/>
+            return <CircularProgress className="list-customers-loading-spinner"/>
         }
     }
 

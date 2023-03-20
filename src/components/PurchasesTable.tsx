@@ -4,8 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {State} from "../redux/reducers/root";
 import {useParams} from "react-router-dom";
 import {listPurchases, PurchasesListStatus} from "../redux/reducers/purchases";
-import {CustomerListStatus} from "../redux/reducers/customers";
-import {Spinner} from "react-bootstrap";
+import {Box, CircularProgress} from "@mui/material";
 
 const columns: GridColDef[] = [
     {field: 'frame_model', headerName: 'Model Oprawki', width: 150, editable: true,},
@@ -39,16 +38,13 @@ const PurchasesTable: React.FC = () => {
     const purchases = useSelector(selectPurchases)
     const listStatus = useSelector(selectListStatus)
 
-    function renderLoader() {
-        if (listStatus === PurchasesListStatus.LOADING) {
-            return <Spinner animation="border" className="list-customers-loading-spinner"/>
-        }
+    if (listStatus === PurchasesListStatus.LOADING) {
+        return <Box sx={{display: 'flex'}}><CircularProgress className="list-customers-loading-spinner"/></Box>
     }
 
 
     return (
         <div style={{height: 400, width: '100%'}}>
-            {renderLoader()}
             <DataGrid
                 rows={purchases}
                 columns={columns}
