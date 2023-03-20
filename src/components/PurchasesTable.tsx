@@ -3,7 +3,9 @@ import React, {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {State} from "../redux/reducers/root";
 import {useParams} from "react-router-dom";
-import {listPurchases} from "../redux/reducers/purchases";
+import {listPurchases, PurchasesListStatus} from "../redux/reducers/purchases";
+import {CustomerListStatus} from "../redux/reducers/customers";
+import {Spinner} from "react-bootstrap";
 
 const columns: GridColDef[] = [
     {field: 'frame_model', headerName: 'Model Oprawki', width: 150, editable: true,},
@@ -20,6 +22,7 @@ const columns: GridColDef[] = [
 ];
 
 const selectPurchases = (state: State) => state.purchases.entities
+const selectListStatus = (state: State) => state.purchases.purchasesListStatus
 
 
 const PurchasesTable: React.FC = () => {
@@ -34,9 +37,18 @@ const PurchasesTable: React.FC = () => {
         , [customerId, dispatch])
 
     const purchases = useSelector(selectPurchases)
+    const listStatus = useSelector(selectListStatus)
+
+    function renderLoader() {
+        if (listStatus === PurchasesListStatus.LOADING) {
+            return <Spinner animation="border" className="list-customers-loading-spinner"/>
+        }
+    }
+
 
     return (
         <div style={{height: 400, width: '100%'}}>
+            {renderLoader()}
             <DataGrid
                 rows={purchases}
                 columns={columns}

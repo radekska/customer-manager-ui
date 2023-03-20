@@ -1,21 +1,10 @@
 import {Customer} from "../../models/customer";
 import {Purchase} from "../../models/purchase";
-
-export enum CustomerAddStatus {
-    IDLE = "idle",
-    ADDING = "adding",
-    SUCCESS = "success",
-    FAILED = "failed",
-}
-
-export enum CustomerListStatus {
-    IDLE = "idle",
-    LOADING = "loading",
-    FAILED = "failed",
-}
+import {CustomerAddStatus, CustomerListStatus} from "./customers";
+import {PurchasesListStatus} from "./purchases";
 
 type CustomersState = { entities: Customer[], customerListStatus: CustomerListStatus, customerAddStatus: CustomerAddStatus }
-type PurchasesState = { entities: Purchase[] }
+type PurchasesState = { entities: Purchase[], purchasesListStatus: PurchasesListStatus }
 export type State = { customers: CustomersState, purchases: PurchasesState }
 
 
@@ -26,7 +15,8 @@ const initialState: State = {
         customerAddStatus: CustomerAddStatus.IDLE,
     },
     purchases: {
-        entities: []
+        entities: [],
+        purchasesListStatus: PurchasesListStatus.IDLE
     }
 }
 
@@ -121,11 +111,17 @@ export default function rootReducer(state = initialState, action: any) {
                     customerListStatus: state.customers.customerListStatus
                 }
             }
+        case "purchases/purchasesLoading":
+            console.log(state, action)
+            return {
+                ...state,
+                purchases: {entities: state.purchases.entities, purchasesListStatus: PurchasesListStatus.LOADING}
+            }
         case "purchases/purchasesLoaded":
             console.log(state, action)
             return {
                 ...state,
-                purchases: {entities: action.payload}
+                purchases: {entities: action.payload, purchasesListStatus: PurchasesListStatus.IDLE}
             }
         default:
             return state

@@ -3,7 +3,8 @@ import {Card, Col, Form, ListGroup, Spinner, Stack} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import {useSelector} from "react-redux";
 import Button from "@mui/material/Button";
-import { CustomerListStatus, State } from "../redux/reducers/root";
+import { State } from "../redux/reducers/root";
+import {CustomerListStatus} from "../redux/reducers/customers";
 
 
 const selectCustomers = (state: State) => state.customers.entities

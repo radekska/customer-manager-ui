@@ -50,3 +50,16 @@ export function deleteCustomer(customerId: string) {
         })
     }
 }
+
+export enum CustomerAddStatus {
+    IDLE = "idle",
+    ADDING = "adding",
+    SUCCESS = "success",
+    FAILED = "failed",
+}
+
+export enum CustomerListStatus {
+    IDLE = "idle",
+    LOADING = "loading",
+    FAILED = "failed",
+}
