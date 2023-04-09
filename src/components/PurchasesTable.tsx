@@ -1,9 +1,11 @@
-import {DataGrid, GridColDef, GridValueGetterParams} from '@mui/x-data-grid';
+import {DataGrid, GridColDef, GridToolbar, GridValueGetterParams} from '@mui/x-data-grid';
 import React, {useEffect} from "react";
-import {useDispatch, useSelector} from "react-redux";
 import {State} from "../redux/reducers/root";
 import {useParams} from "react-router-dom";
-import {listPurchases, PurchasesListStatus} from "../redux/reducers/purchases";
+import {useDispatch, useSelector} from 'react-redux';
+import {listPurchases, PurchasesListStatus} from '../redux/reducers/purchases';
+import { IconButton } from '@mui/material';
+import { Add } from '@mui/icons-material';
 
 const columns: GridColDef[] = [
     {field: 'frame_model', headerName: 'Model Oprawki', width: 150, editable: true,},
@@ -48,9 +50,19 @@ const PurchasesTable: React.FC = () => {
                 loading={(() => {
                     return listStatus === PurchasesListStatus.LOADING
                 })()}
+                components={{
+                    Toolbar: () => (
+                        <GridToolbar>
+                            <IconButton>
+                                <Add/>
+                            </IconButton>
+                        </GridToolbar>
+                    ),
+                }}
             />
         </div>
     );
 }
+
 
 export default PurchasesTable

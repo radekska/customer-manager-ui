@@ -1,7 +1,7 @@
 import axios from "axios";
 import {Customer} from "../../models/customer";
 
-export function listCustomers(firstName: string, lastName: string) {
+export function listCustomers(firstName: string = "", lastName: string = "") {
     return async function listCustomersThunk(dispatch: any, getState: any) {
         dispatch({type: "customers/customersLoading"})
         axios.get<Customer[]>(`http://localhost:8080/api/customers?firstName=${firstName}&lastName=${lastName}`).then(response => dispatch({

@@ -9,11 +9,13 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import store from './store';
+import {listCustomers} from "./redux/reducers/customers";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
 
+store.dispatch(listCustomers())
 
 root.render(
     <BrowserRouter>
