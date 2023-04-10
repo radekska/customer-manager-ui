@@ -1,10 +1,10 @@
 import {Customer} from "../../models/customer";
 import {Purchase} from "../../models/purchase";
-import {CustomerAddStatus, CustomerListStatus} from "./customers";
+import {AddStatus, CustomerListStatus} from "./customers";
 import {PurchasesListStatus} from "./purchases";
 
-type CustomersState = { entities: Customer[], customerListStatus: CustomerListStatus, customerAddStatus: CustomerAddStatus }
-type PurchasesState = { entities: Purchase[], purchasesListStatus: PurchasesListStatus }
+type CustomersState = { entities: Customer[], customerListStatus: CustomerListStatus, customerAddStatus: AddStatus }
+type PurchasesState = { entities: Purchase[], purchasesListStatus: PurchasesListStatus, purchaseAddStatus: AddStatus }
 export type State = { customers: CustomersState, purchases: PurchasesState }
 
 
@@ -12,11 +12,12 @@ const initialState: State = {
     customers: {
         entities: [],
         customerListStatus: CustomerListStatus.IDLE,
-        customerAddStatus: CustomerAddStatus.IDLE,
+        customerAddStatus: AddStatus.IDLE,
     },
     purchases: {
         entities: [],
-        purchasesListStatus: PurchasesListStatus.IDLE
+        purchasesListStatus: PurchasesListStatus.IDLE,
+        purchaseAddStatus: AddStatus.IDLE,
     }
 }
 
@@ -59,7 +60,7 @@ export default function rootReducer(state = initialState, action: any) {
                 ...state,
                 customers: {
                     entities: [...state.customers.entities],
-                    customerAddStatus: CustomerAddStatus.IDLE,
+                    customerAddStatus: AddStatus.IDLE,
                     customerListStatus: state.customers.customerListStatus
                 }
             }
@@ -69,7 +70,7 @@ export default function rootReducer(state = initialState, action: any) {
                 ...state,
                 customers: {
                     entities: [...state.customers.entities],
-                    customerAddStatus: CustomerAddStatus.ADDING,
+                    customerAddStatus: AddStatus.ADDING,
                     customerListStatus: state.customers.customerListStatus
                 }
             }
@@ -79,7 +80,7 @@ export default function rootReducer(state = initialState, action: any) {
                 ...state,
                 customers: {
                     entities: [...state.customers.entities],
-                    customerAddStatus: CustomerAddStatus.FAILED,
+                    customerAddStatus: AddStatus.FAILED,
                     customerListStatus: state.customers.customerListStatus
                 }
             }
@@ -97,7 +98,7 @@ export default function rootReducer(state = initialState, action: any) {
                             telephone_number: action.payload.telephone_number
                         }
                     ],
-                    customerAddStatus: CustomerAddStatus.SUCCESS,
+                    customerAddStatus: AddStatus.SUCCESS,
                     customerListStatus: state.customers.customerListStatus
                 }
             }
@@ -115,13 +116,13 @@ export default function rootReducer(state = initialState, action: any) {
             console.log(state, action)
             return {
                 ...state,
-                purchases: {entities: state.purchases.entities, purchasesListStatus: PurchasesListStatus.LOADING}
+                purchases: {entities: state.purchases.entities, purchasesListStatus: PurchasesListStatus.LOADING, purchaseAddStatus: AddStatus.IDLE}
             }
         case "purchases/purchasesLoaded":
             console.log(state, action)
             return {
                 ...state,
-                purchases: {entities: action.payload, purchasesListStatus: PurchasesListStatus.IDLE}
+                purchases: {entities: action.payload, purchasesListStatus: PurchasesListStatus.IDLE, purchaseAddStatus: AddStatus.IDLE}
             }
         default:
             return state

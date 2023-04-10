@@ -1,7 +1,7 @@
 import {DataGrid, GridColDef, GridToolbarContainer, GridValueGetterParams} from '@mui/x-data-grid';
 import React, {useEffect} from "react";
 import {State} from "../redux/reducers/root";
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from 'react-redux';
 import {listPurchases, PurchasesListStatus} from '../redux/reducers/purchases';
 import {Button, IconButton} from '@mui/material';
@@ -12,15 +12,15 @@ const selectPurchases = (state: State) => state.purchases.entities
 const selectListStatus = (state: State) => state.purchases.purchasesListStatus
 
 
-
-
 // TODO https://mui.com/x/react-data-grid/editing/#full-featured-crud-component
 function AddPurchaseToolbar() {
     return (
         <GridToolbarContainer>
-            <Button color="success" startIcon={<Add/>}>
-                Dodaj zakup
-            </Button>
+            <Link to="/purchase/add"> # TODO ogarnij customer ID tutaj.
+                <Button color="success" startIcon={<Add/>}>
+                    Dodaj zakup
+                </Button>
+            </Link>
         </GridToolbarContainer>
     );
 }

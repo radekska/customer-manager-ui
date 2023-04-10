@@ -6,6 +6,7 @@ import Button from "@mui/material/Button";
 import {State} from "../redux/reducers/root";
 import {CustomerListStatus, listCustomers} from "../redux/reducers/customers";
 import {CircularProgress} from "@mui/material";
+import Alert from "@mui/material/Alert";
 
 
 const selectCustomers = (state: State) => state.customers.entities
@@ -36,6 +37,18 @@ const CustomersList: React.FC = () => {
         }
     }
 
+    function renderCustomersList() {
+        if (customers.length > 0) {
+            return customers.map(customer =>
+                <Link to={`/customers/${customer.id}`} key={customer.id}>
+                    <ListGroup.Item action>{customer.first_name} {customer.last_name}
+                    </ListGroup.Item>
+                </Link>
+            )
+        }
+        return <Alert severity="warning">Brak klientów</Alert>
+    }
+
 
     return (
         <Col md="auto">
@@ -45,17 +58,13 @@ const CustomersList: React.FC = () => {
                         <Form>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                                 <Form.Label>Znajdź Klienta</Form.Label>
-                                <Form.Control onChange={getCustomersListHandler} type="attributes" placeholder="imię, nazwisko"/>
+                                <Form.Control onChange={getCustomersListHandler} type="attributes"
+                                              placeholder="imię, nazwisko"/>
                             </Form.Group>
                         </Form>
                         <ListGroup>
                             {renderLoader()}
-                            {customers.map(customer =>
-                                <Link to={`/customers/${customer.id}`} key={customer.id}>
-                                    <ListGroup.Item action>{customer.first_name} {customer.last_name}
-                                    </ListGroup.Item>
-                                </Link>
-                            )}
+                            {renderCustomersList()}
                         </ListGroup>
                     </Stack>
                 </Card.Body>

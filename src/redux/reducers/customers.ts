@@ -52,7 +52,7 @@ export function deleteCustomer(customerId: string) {
     }
 }
 
-export enum CustomerAddStatus {
+export enum AddStatus {
     IDLE = "idle",
     ADDING = "adding",
     SUCCESS = "success",

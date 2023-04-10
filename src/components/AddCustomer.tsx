@@ -5,7 +5,7 @@ import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button';
 import {State} from "../redux/reducers/root";
 import {useDispatch, useSelector} from "react-redux";
-import {addCustomer, CustomerAddStatus} from "../redux/reducers/customers";
+import {addCustomer, AddStatus} from "../redux/reducers/customers";
 
 const selectAddStatus = (state: State) => state.customers.customerAddStatus
 
@@ -37,12 +37,12 @@ const AddCustomer: React.FC = () => {
 
     const addStatus = useSelector(selectAddStatus)
     const showErrorLabel = () => {
-        if (addStatus === CustomerAddStatus.FAILED) {
+        if (addStatus === AddStatus.FAILED) {
             return <Alert key="danger" severity="error">Wystąpił błąd w dodawaniu klienta</Alert>
         }
     }
     const showSuccessfulLabel = () => {
-        if (addStatus === CustomerAddStatus.SUCCESS) {
+        if (addStatus === AddStatus.SUCCESS) {
             return <Alert key="success" severity="success">Klient został dodany poprawnie</Alert>
         }
     }

@@ -5,6 +5,7 @@ import {Card, Container, Navbar, Row} from "react-bootstrap";
 import CustomersList from "./components/CustomersList";
 import CustomerDetails from "./components/CustomerDetails";
 import AddCustomer from "./components/AddCustomer";
+import AddPurchase from "./components/AddPurchase";
 
 const App: React.FC = () => {
     return (
@@ -24,6 +25,7 @@ const App: React.FC = () => {
                                    element={
                                        <Container><Row><CustomersList/><CustomerDetails/></Row></Container>}></Route>
                             <Route path="/customer/add" element={<AddCustomer/>}></Route>
+                            <Route path="/purchase/add" element={<AddPurchase/>}></Route>
                         </Routes>
                     </Row>
                 </Card.Body>
