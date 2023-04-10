@@ -112,7 +112,7 @@ export default function rootReducer(state = initialState, action: any) {
                     customerListStatus: state.customers.customerListStatus
                 }
             }
-        case "purchases/purchasesLoading":
+        case "purchases/purchasesLoading": // TODO OGARNIJ RESZTE EVENTÓW
             console.log(state, action)
             return {
                 ...state,
