@@ -12,11 +12,11 @@ const selectPurchases = (state: State) => state.purchases.entities
 const selectListStatus = (state: State) => state.purchases.purchasesListStatus
 
 
-// TODO https://mui.com/x/react-data-grid/editing/#full-featured-crud-component
-function AddPurchaseToolbar() {
+function AddPurchaseToolbar(customerId: string) {
+    const path = `/customers/${customerId}/purchase/add`
     return (
         <GridToolbarContainer>
-            <Link to="/purchase/add"> # TODO ogarnij customer ID tutaj.
+            <Link to={path}>
                 <Button color="success" startIcon={<Add/>}>
                     Dodaj zakup
                 </Button>
@@ -29,14 +29,11 @@ const PurchasesTable: React.FC = () => {
     const customerId = useParams().id!
     const dispatch = useDispatch();
 
-    const addPurchaseHandler = (event: any) => {
-        console.log(event)
-    }
     const editPurchaseHandler = (event: any) => {
-        console.log(event)
+        console.log(event) // TODO - implement
     }
     const deletePurchaseHandler = (event: any) => {
-        console.log(event)
+        console.log(event) // TODO - implement
     }
 
 
@@ -49,8 +46,6 @@ const PurchasesTable: React.FC = () => {
 
     const purchases = useSelector(selectPurchases)
     const listStatus = useSelector(selectListStatus)
-
-    console.log(purchases)
 
     const columns: GridColDef[] = [
         {field: 'frame_model', headerName: 'Model Oprawki', width: 150, editable: true,},
@@ -90,7 +85,7 @@ const PurchasesTable: React.FC = () => {
                     return listStatus === PurchasesListStatus.LOADING
                 })()}
                 slots={{
-                    toolbar: AddPurchaseToolbar
+                    toolbar: () => AddPurchaseToolbar(customerId)
                 }}
             />
         </div>

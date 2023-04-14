@@ -59,7 +59,7 @@ export default function rootReducer(state = initialState, action: any) {
             return {
                 ...state,
                 customers: {
-                    entities: [...state.customers.entities],
+                    entities: state.customers.entities,
                     customerAddStatus: AddStatus.IDLE,
                     customerListStatus: state.customers.customerListStatus
                 }
@@ -112,17 +112,79 @@ export default function rootReducer(state = initialState, action: any) {
                     customerListStatus: state.customers.customerListStatus
                 }
             }
-        case "purchases/purchasesLoading": // TODO OGARNIJ RESZTE EVENTÓW
+        case "purchases/purchaseAddIdle":
             console.log(state, action)
             return {
                 ...state,
-                purchases: {entities: state.purchases.entities, purchasesListStatus: PurchasesListStatus.LOADING, purchaseAddStatus: AddStatus.IDLE}
+                purchases: {
+                    entities: state.purchases.entities,
+                    purchasesListStatus: state.purchases.purchasesListStatus,
+                    purchaseAddStatus: AddStatus.IDLE
+                }
+            }
+        case "purchases/purchaseAdding":
+            console.log(state, action)
+            return {
+                ...state,
+                purchases: {
+                    entities: state.purchases.entities,
+                    purchasesListStatus: state.purchases.purchasesListStatus,
+                    purchaseAddStatus: AddStatus.ADDING
+                }
+            }
+        case "purchases/purchaseAddingFailed":
+            console.log(state, action)
+            return {
+                ...state,
+                purchases: {
+                    entities: state.purchases.entities,
+                    purchasesListStatus: state.purchases.purchasesListStatus,
+                    purchaseAddStatus: AddStatus.FAILED
+                }
+            }
+        case "purchases/purchaseAddingSuccess":
+            console.log(state, action)
+            return {
+                ...state,
+                purchases: {
+                    entities: [
+                        ...state.purchases.entities,
+                        {
+                            id: action.payload.id,
+                            frame_model: action.payload.frame_model,
+                            lens_type: action.payload.lens_type,
+                            lens_power: action.payload.lens_power,
+                            pd: action.payload.pd,
+                            purchase_type: action.payload.purchase_type,
+                            customer_id: action.payload.customer_id,
+                            purchased_at: action.payload.purchased_at,
+                            created_at: action.payload.created_at,
+                            updated_at: action.payload.updated_at
+                        }
+                    ],
+                    purchasesListStatus: state.purchases.purchasesListStatus,
+                    purchaseAddStatus: AddStatus.SUCCESS
+                }
+            }
+        case "purchases/purchasesLoading":
+            console.log(state, action)
+            return {
+                ...state,
+                purchases: {
+                    entities: state.purchases.entities,
+                    purchasesListStatus: PurchasesListStatus.LOADING,
+                    purchaseAddStatus: AddStatus.IDLE
+                }
             }
         case "purchases/purchasesLoaded":
             console.log(state, action)
             return {
                 ...state,
-                purchases: {entities: action.payload, purchasesListStatus: PurchasesListStatus.IDLE, purchaseAddStatus: AddStatus.IDLE}
+                purchases: {
+                    entities: action.payload,
+                    purchasesListStatus: PurchasesListStatus.IDLE,
+                    purchaseAddStatus: AddStatus.IDLE
+                }
             }
         default:
             return state

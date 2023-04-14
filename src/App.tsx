@@ -25,7 +25,7 @@ const App: React.FC = () => {
                                    element={
                                        <Container><Row><CustomersList/><CustomerDetails/></Row></Container>}></Route>
                             <Route path="/customer/add" element={<AddCustomer/>}></Route>
-                            <Route path="/purchase/add" element={<AddPurchase/>}></Route>
+                            <Route path="/customers/:id/purchase/add" element={<AddPurchase/>}></Route>
                         </Routes>
                     </Row>
                 </Card.Body>
