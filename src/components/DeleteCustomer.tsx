@@ -1,8 +1,8 @@
 import React from "react";
 import {Button} from "react-bootstrap";
 import {useParams} from "react-router-dom";
-import {deleteCustomer} from "../reducers/root";
 import {useDispatch} from "react-redux";
+import {deleteCustomer} from "../redux/reducers/customers";
 
 
 const DeleteCustomer: React.FC = () => {

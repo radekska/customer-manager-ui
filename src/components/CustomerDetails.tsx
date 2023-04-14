@@ -1,9 +1,11 @@
 import React from "react";
-import {Alert, Card, Col} from "react-bootstrap";
+import {Card, Col} from "react-bootstrap";
 import {useParams} from "react-router-dom";
 import DeleteCustomer from "./DeleteCustomer";
 import {useSelector} from "react-redux";
-import {State} from "../reducers/root";
+import {State} from "../redux/reducers/root";
+import PurchasesTable from "./PurchasesTable";
+import Alert from "@mui/material/Alert";
 
 function selectCustomerById(customerId: string) {
     return (state: State) => state.customers.entities.find(customer => customer.id === customerId)
@@ -14,7 +16,7 @@ const CustomerDetails: React.FC = () => {
     const customer = useSelector(selectCustomerById(customerId))
 
     if (typeof customer === "undefined") {
-        return <Col><Card><Card.Body><Card.Title><Alert variant="warning">Klient nieznaleziony</Alert></Card.Title>
+        return <Col><Card><Card.Body><Card.Title><Alert severity="warning">Klient nieznaleziony</Alert></Card.Title>
         </Card.Body></Card></Col>
     }
 
@@ -22,12 +24,19 @@ const CustomerDetails: React.FC = () => {
         <Col>
             <Card>
                 <Card.Body>
-                    <Card.Title>Imię i nazwisko: {customer.first_name} {customer.last_name}</Card.Title>
+                    <Card.Title>Dane Klienta</Card.Title>
+                    <Card.Text>Imię: {customer.first_name}</Card.Text>
+                    <Card.Text>Nazwisko: {customer.last_name}</Card.Text>
                     <Card.Text>
                         Numer telefonu: {customer.telephone_number}
                     </Card.Text>
-                    <DeleteCustomer/>
+
                 </Card.Body>
+                <Card.Body>
+                    <Card.Title>Zakupy</Card.Title>
+                    <PurchasesTable/>
+                </Card.Body>
+                <Card.Footer><DeleteCustomer/></Card.Footer>
             </Card>
         </Col>
     )
