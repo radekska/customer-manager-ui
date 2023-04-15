@@ -43,6 +43,29 @@ export function addPurchase(customerId: string, frameModel: string, lensPower: s
     }
 }
 
+
+export function deletePurchase(customerId: string, purchaseId: string) {
+    return async function deletePurchaseThunk(dispatch: any, getState: any) {
+        dispatch({type: "purchases/purchaseDeleting"})
+        axios.delete<Purchase>(`http://localhost:8080/api/customers/${customerId}/purchases/${purchaseId}`).then(response => {
+            dispatch({
+                type: "purchases/purchaseDeletingSuccess",
+                payload: purchaseId
+            })
+            setTimeout(() => dispatch({
+                type: "purchases/purchaseDeleteIdle",
+            }), 5000)
+        }).catch(() => {
+            dispatch({
+                type: "purchases/purchaseDeletingFailed"
+            })
+            setTimeout(() => dispatch({
+                type: "purchases/purchaseDeleteIdle",
+            }), 5000)
+        })
+
+    }
+}
 export enum PurchasesListStatus {
     IDLE = "idle",
     LOADING = "loading",

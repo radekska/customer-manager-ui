@@ -46,7 +46,7 @@ const AddPurchase: React.FC = () => {
 
         // @ts-ignore
         dispatch(addPurchaseThunk)
-        clearInputFields()
+        // clearInputFields()
 
     }
 
