@@ -1,10 +1,15 @@
 import {Customer} from "../../models/customer";
 import {Purchase} from "../../models/purchase";
-import {AddStatus, CustomerListStatus} from "./customers";
+import {AddStatus, CustomerListStatus, DeleteStatus} from "./customers";
 import {PurchasesListStatus} from "./purchases";
 
 type CustomersState = { entities: Customer[], customerListStatus: CustomerListStatus, customerAddStatus: AddStatus }
-type PurchasesState = { entities: Purchase[], purchasesListStatus: PurchasesListStatus, purchaseAddStatus: AddStatus }
+type PurchasesState = {
+    entities: Purchase[],
+    purchasesListStatus: PurchasesListStatus,
+    purchaseAddStatus: AddStatus,
+    purchaseDeleteStatus: DeleteStatus
+}
 export type State = { customers: CustomersState, purchases: PurchasesState }
 
 
@@ -18,6 +23,7 @@ const initialState: State = {
         entities: [],
         purchasesListStatus: PurchasesListStatus.IDLE,
         purchaseAddStatus: AddStatus.IDLE,
+        purchaseDeleteStatus: DeleteStatus.IDLE
     }
 }
 
@@ -119,7 +125,8 @@ export default function rootReducer(state = initialState, action: any) {
                 purchases: {
                     entities: state.purchases.entities,
                     purchasesListStatus: state.purchases.purchasesListStatus,
-                    purchaseAddStatus: AddStatus.IDLE
+                    purchaseAddStatus: AddStatus.IDLE,
+                    purchaseDeleteStatus: DeleteStatus.IDLE
                 }
             }
         case "purchases/purchaseAdding":
@@ -129,7 +136,8 @@ export default function rootReducer(state = initialState, action: any) {
                 purchases: {
                     entities: state.purchases.entities,
                     purchasesListStatus: state.purchases.purchasesListStatus,
-                    purchaseAddStatus: AddStatus.ADDING
+                    purchaseAddStatus: AddStatus.ADDING,
+                    purchaseDeleteStatus: DeleteStatus.IDLE
                 }
             }
         case "purchases/purchaseAddingFailed":
@@ -139,7 +147,8 @@ export default function rootReducer(state = initialState, action: any) {
                 purchases: {
                     entities: state.purchases.entities,
                     purchasesListStatus: state.purchases.purchasesListStatus,
-                    purchaseAddStatus: AddStatus.FAILED
+                    purchaseAddStatus: AddStatus.FAILED,
+                    purchaseDeleteStatus: DeleteStatus.IDLE
                 }
             }
         case "purchases/purchaseAddingSuccess":
@@ -163,7 +172,52 @@ export default function rootReducer(state = initialState, action: any) {
                         }
                     ],
                     purchasesListStatus: state.purchases.purchasesListStatus,
-                    purchaseAddStatus: AddStatus.SUCCESS
+                    purchaseAddStatus: AddStatus.SUCCESS,
+                    purchaseDeleteStatus: DeleteStatus.IDLE
+                }
+            }
+        case "purchases/purchaseDeleting":
+            console.log(state, action)
+            return {
+                ...state,
+                purchases: {
+                    entities: state.purchases.entities,
+                    purchasesListStatus: state.purchases.purchasesListStatus,
+                    purchaseAddStatus: state.purchases.purchaseAddStatus,
+                    purchaseDeleteStatus: DeleteStatus.DELETING
+                }
+            }
+        case "purchases/purchaseDeletingFailed":
+            console.log(state, action)
+            return {
+                ...state,
+                purchases: {
+                    entities: state.purchases.entities,
+                    purchasesListStatus: state.purchases.purchasesListStatus,
+                    purchaseAddStatus: state.purchases.purchaseAddStatus,
+                    purchaseDeleteStatus: DeleteStatus.FAILED
+                }
+            }
+        case "purchases/purchaseDeletingSuccess":
+            console.log(state, action)
+            return {
+                ...state,
+                purchases: {
+                    entities: state.purchases.entities.filter(purchase => purchase.id !== action.payload),
+                    purchasesListStatus: state.purchases.purchasesListStatus,
+                    purchaseAddStatus: state.purchases.purchaseAddStatus,
+                    purchaseDeleteStatus: DeleteStatus.SUCCESS
+                }
+            }
+        case "purchases/purchaseDeleteIdle":
+            console.log(state, action)
+            return {
+                ...state,
+                purchases: {
+                    entities: state.purchases.entities,
+                    purchasesListStatus: state.purchases.purchasesListStatus,
+                    purchaseAddStatus: state.purchases.purchaseAddStatus,
+                    purchaseDeleteStatus: DeleteStatus.IDLE
                 }
             }
         case "purchases/purchasesLoading":
@@ -173,7 +227,8 @@ export default function rootReducer(state = initialState, action: any) {
                 purchases: {
                     entities: state.purchases.entities,
                     purchasesListStatus: PurchasesListStatus.LOADING,
-                    purchaseAddStatus: AddStatus.IDLE
+                    purchaseAddStatus: AddStatus.IDLE,
+                    purchaseDeleteStatus: DeleteStatus.IDLE
                 }
             }
         case "purchases/purchasesLoaded":
@@ -183,7 +238,8 @@ export default function rootReducer(state = initialState, action: any) {
                 purchases: {
                     entities: action.payload,
                     purchasesListStatus: PurchasesListStatus.IDLE,
-                    purchaseAddStatus: AddStatus.IDLE
+                    purchaseAddStatus: AddStatus.IDLE,
+                    purchaseDeleteStatus: DeleteStatus.IDLE
                 }
             }
         default:

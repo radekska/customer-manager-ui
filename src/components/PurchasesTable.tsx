@@ -1,11 +1,14 @@
-import {DataGrid, GridColDef, GridToolbarContainer, GridValueGetterParams} from '@mui/x-data-grid';
+import {DataGrid, GridColDef, GridRowId, GridToolbarContainer, GridValueGetterParams} from '@mui/x-data-grid';
 import React, {useEffect} from "react";
 import {State} from "../redux/reducers/root";
 import {Link, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from 'react-redux';
-import {listPurchases, PurchasesListStatus} from '../redux/reducers/purchases';
+import {deletePurchase, listPurchases, PurchasesListStatus} from '../redux/reducers/purchases';
 import {Button, IconButton} from '@mui/material';
 import {Add, Delete} from '@mui/icons-material';
+import {Card} from 'react-bootstrap';
+import Alert from "@mui/material/Alert";
+import {DeleteStatus} from "../redux/reducers/customers";
 
 
 const selectPurchases = (state: State) => state.purchases.entities
@@ -25,6 +28,9 @@ function AddPurchaseToolbar(customerId: string) {
     );
 }
 
+const selectDeleteStatus = (state: State) => state.purchases.purchaseDeleteStatus
+
+
 const PurchasesTable: React.FC = () => {
     const customerId = useParams().id!
     const dispatch = useDispatch();
@@ -32,8 +38,11 @@ const PurchasesTable: React.FC = () => {
     const editPurchaseHandler = (event: any) => {
         console.log(event) // TODO - implement
     }
-    const deletePurchaseHandler = (event: any) => {
-        console.log(event) // TODO - implement
+    const deletePurchaseHandler = (purchaseId: GridRowId) => {
+        console.log(purchaseId.toString(), customerId)
+        const deletePurchaseThunk = deletePurchase(customerId, purchaseId.toString())
+        // @ts-ignore
+        dispatch(deletePurchaseThunk)
     }
 
 
@@ -73,22 +82,38 @@ const PurchasesTable: React.FC = () => {
             ),
         },
     ];
+    const deleteStatus = useSelector(selectDeleteStatus)
+
+    const showErrorLabel = () => {
+        if (deleteStatus === DeleteStatus.FAILED) {
+            return <Alert key="danger" severity="error">Wystąpił błąd w usuwaniu zakupu</Alert>
+        }
+    }
+    const showSuccessfulLabel = () => {
+        if (deleteStatus === DeleteStatus.SUCCESS) {
+            return <Alert key="success" severity="success">Zakup usunięty poprawnie</Alert>
+        }
+    }
 
     return (
-        <div style={{height: 400, width: '100%'}}>
-            <DataGrid
-                rows={purchases}
-                columns={columns}
-                checkboxSelection
-                editMode="row"
-                loading={(() => {
-                    return listStatus === PurchasesListStatus.LOADING
-                })()}
-                slots={{
-                    toolbar: () => AddPurchaseToolbar(customerId)
-                }}
-            />
-        </div>
+        <Card>
+            {showErrorLabel()}
+            {showSuccessfulLabel()}
+            <div style={{height: 400, width: '100%'}}>
+                <DataGrid
+                    rows={purchases}
+                    columns={columns}
+                    checkboxSelection={false}
+                    editMode="row"
+                    loading={(() => {
+                        return listStatus === PurchasesListStatus.LOADING
+                    })()}
+                    slots={{
+                        toolbar: () => AddPurchaseToolbar(customerId)
+                    }}
+                />
+            </div>
+        </Card>
     );
 }
 

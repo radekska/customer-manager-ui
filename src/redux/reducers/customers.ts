@@ -59,6 +59,13 @@ export enum AddStatus {
     FAILED = "failed",
 }
 
+export enum DeleteStatus {
+    IDLE = "idle",
+    DELETING = "deleting",
+    SUCCESS = "success",
+    FAILED = "failed",
+}
+
 export enum CustomerListStatus {
     IDLE = "idle",
     LOADING = "loading",
