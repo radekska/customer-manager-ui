@@ -10,11 +10,13 @@ COPY package*.json ./
 # Install the project dependencies
 RUN npm install
 
+RUN npm install -g serve
 # Copy the entire project directory to the container
 COPY . .
 
 # Build the React app
 RUN npm run build
+
 
 # Set the environment variable for production
 ENV NODE_ENV=production
