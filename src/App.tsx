@@ -12,7 +12,7 @@ const App: React.FC = () => {
         <Container>
             <Row>
                 <Navbar>
-                    <Link to="/"><Navbar.Brand>Menadżer Klientów</Navbar.Brand></Link>
+                    <Link to="/"><Navbar.Brand>Panel Klientów</Navbar.Brand></Link>
                 </Navbar>
             </Row>
             <Card>
