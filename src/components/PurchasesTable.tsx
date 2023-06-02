@@ -57,10 +57,11 @@ const PurchasesTable: React.FC = () => {
     const listStatus = useSelector(selectListStatus)
 
     const columns: GridColDef[] = [
-        {field: 'frame_model', headerName: 'Model Oprawki', width: 150, editable: true,},
-        {field: 'lens_type', headerName: 'Rodzaj Szkieł', width: 150, editable: true},
-        {field: 'lens_power', headerName: 'Moce Szkieł', width: 120, editable: true},
+        {field: 'lens_power', headerName: 'Moce szkieł', width: 120, editable: true},
+        {field: 'frame_model', headerName: 'Model oprawki', width: 150, editable: true,},
+        {field: 'lens_type', headerName: 'Rodzaj szkieł', width: 150, editable: true},
         {field: 'pd', headerName: 'PD', width: 50, editable: true},
+        {field: 'purchase_type', headerName: 'Rodzaj zakupu', width: 100},
         {
             field: 'created_at',
             headerName: 'Data Zakupu',
