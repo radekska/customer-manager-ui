@@ -1,4 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'rsuite/dist/rsuite.min.css';
 import React from "react";
 import {Link, Route, Routes} from "react-router-dom";
 import {Card, Container, Navbar, Row} from "react-bootstrap";
