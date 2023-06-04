@@ -82,7 +82,7 @@ const PurchasesTable: React.FC = () => {
         </Alert>
       );
     }
-  };
+  }
 
   return (
     <Card>
