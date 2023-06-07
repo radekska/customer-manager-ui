@@ -1,13 +1,14 @@
-import { Card, Col, ListGroup, Stack } from "react-bootstrap";
+import { Card, Col, Stack } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { IconButton, List, Message, Panel } from "rsuite";
+import { IconButton, List, Message } from "rsuite";
 import PlusIcon from "@rsuite/icons/Plus";
 import { State } from "../redux/reducers/root";
-import { CustomerListStatus, listCustomers } from "../redux/reducers/customers";
+import { listCustomers } from "../redux/reducers/customers";
 import { CircularProgress } from "@mui/material";
 import { Input, InputGroup } from "rsuite";
 import SearchIcon from "@rsuite/icons/Search";
+import { ListStatus } from "../enums";
 
 const selectCustomers = (state: State) => state.customers.entities;
 const selectListStatus = (state: State) => state.customers.customerListStatus;
@@ -34,7 +35,7 @@ const CustomersList: React.FC = () => {
   const listStatus = useSelector(selectListStatus);
 
   function renderLoader() {
-    if (listStatus === CustomerListStatus.LOADING) {
+    if (listStatus === ListStatus.LOADING) {
       return <CircularProgress className="list-customers-loading-spinner" />;
     }
   }
@@ -45,7 +46,7 @@ const CustomersList: React.FC = () => {
         <Link
           to={`/customers/${customer.id}`}
           key={customer.id}
-          style={{ textDecoration: "none", color: "black"}}
+          style={{ textDecoration: "none", color: "black" }}
         >
           <List.Item>
             {customer.first_name} {customer.last_name}

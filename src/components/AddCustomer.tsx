@@ -4,9 +4,10 @@ import { Card, Container } from "react-bootstrap";
 import Alert from "@mui/material/Alert";
 import { State } from "../redux/reducers/root";
 import { useDispatch, useSelector } from "react-redux";
-import { addCustomer, AddStatus } from "../redux/reducers/customers";
+import { addCustomer } from "../redux/reducers/customers";
 import { IconButton } from "rsuite";
 import PlusIcon from "@rsuite/icons/Plus";
+import { AddStatus } from "../enums";
 
 const selectAddStatus = (state: State) => state.customers.customerAddStatus;
 
@@ -96,7 +97,8 @@ const AddCustomer: React.FC = () => {
               appearance="primary"
               color="green"
               icon={<PlusIcon />}
-              type="submit">
+              type="submit"
+            >
               Dodaj
             </IconButton>
           </Card.Footer>

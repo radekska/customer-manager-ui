@@ -70,8 +70,3 @@ export function deletePurchase(customerId: string, purchaseId: string) {
 
     }
 }
-export enum PurchasesListStatus {
-    IDLE = "idle",
-    LOADING = "loading",
-    FAILED = "failed",
-}

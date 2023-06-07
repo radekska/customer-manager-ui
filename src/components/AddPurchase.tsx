@@ -3,9 +3,9 @@ import React, {useRef} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {addPurchase} from "../redux/reducers/purchases";
 import {useParams} from "react-router-dom";
-import {AddStatus} from "../redux/reducers/customers";
 import Alert from "@mui/material/Alert";
 import {Card, Container, Form } from "react-bootstrap";
+import { AddStatus } from "../enums";
 
 const selectAddStatus = (state: State) => state.purchases.purchaseAddStatus
 

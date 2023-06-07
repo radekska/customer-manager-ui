@@ -1,23 +1,20 @@
-import { GridRowId, GridToolbarContainer } from "@mui/x-data-grid";
 import React, { useEffect } from "react";
 import { State } from "../redux/reducers/root";
 import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  deletePurchase,
-  listPurchases,
-  PurchasesListStatus,
-} from "../redux/reducers/purchases";
+import { deletePurchase, listPurchases } from "../redux/reducers/purchases";
 import { Card } from "react-bootstrap";
 import Alert from "@mui/material/Alert";
-import { DeleteStatus } from "../redux/reducers/customers";
 import { Table, IconButton } from "rsuite";
 import { HeaderCell } from "rsuite-table";
 import TrashIcon from "@rsuite/icons/Trash";
 import PlusIcon from "@rsuite/icons/Plus";
+import { DeleteStatus, ListStatus } from "../enums";
 
 const selectPurchases = (state: State) => state.purchases.entities;
 const selectListStatus = (state: State) => state.purchases.purchasesListStatus;
+const selectDeleteStatus = (state: State) =>
+  state.purchases.purchaseDeleteStatus;
 
 const AddPurchaseButton: React.FC<{ customerId: string }> = ({
   customerId,
@@ -26,7 +23,7 @@ const AddPurchaseButton: React.FC<{ customerId: string }> = ({
   return (
     <Link to={path}>
       <IconButton
-        appearance="ghost"
+        appearance="primary"
         icon={<PlusIcon />}
         color="green"
       ></IconButton>
@@ -34,8 +31,24 @@ const AddPurchaseButton: React.FC<{ customerId: string }> = ({
   );
 };
 
-const selectDeleteStatus = (state: State) =>
-  state.purchases.purchaseDeleteStatus;
+const showErrorLabel = (deleteStatus: DeleteStatus) => {
+  if (deleteStatus === DeleteStatus.FAILED) {
+    return (
+      <Alert key="danger" severity="error">
+        Wystąpił błąd w usuwaniu zakupu
+      </Alert>
+    );
+  }
+};
+const showSuccessfulLabel = (deleteStatus: DeleteStatus) => {
+  if (deleteStatus === DeleteStatus.SUCCESS) {
+    return (
+      <Alert key="success" severity="success">
+        Zakup usunięty poprawnie
+      </Alert>
+    );
+  }
+};
 
 const PurchasesTable: React.FC = () => {
   const customerId = useParams().id!;
@@ -44,8 +57,8 @@ const PurchasesTable: React.FC = () => {
   const editPurchaseHandler = (event: any) => {
     console.log(event); // TODO - implement
   };
-  const deletePurchaseHandler = (purchaseId: GridRowId) => {
-    console.log(purchaseId.toString(), customerId);
+  const deletePurchaseHandler = (purchaseId: any) => {
+    console.log(purchaseId);
     const deletePurchaseThunk = deletePurchase(
       customerId,
       purchaseId.toString()
@@ -62,27 +75,7 @@ const PurchasesTable: React.FC = () => {
 
   const purchases = useSelector(selectPurchases);
   const listStatus = useSelector(selectListStatus);
-
   const deleteStatus = useSelector(selectDeleteStatus);
-
-  const showErrorLabel = () => {
-    if (deleteStatus === DeleteStatus.FAILED) {
-      return (
-        <Alert key="danger" severity="error">
-          Wystąpił błąd w usuwaniu zakupu
-        </Alert>
-      );
-    }
-  };
-  const showSuccessfulLabel = () => {
-    if (deleteStatus === DeleteStatus.SUCCESS) {
-      return (
-        <Alert key="success" severity="success">
-          Zakup usunięty poprawnie
-        </Alert>
-      );
-    }
-  }
 
   return (
     <Card>
@@ -90,7 +83,7 @@ const PurchasesTable: React.FC = () => {
       <Table
         bordered
         loading={(() => {
-          return listStatus === PurchasesListStatus.LOADING;
+          return listStatus === ListStatus.LOADING;
         })()}
         data={purchases}
       >
@@ -139,8 +132,8 @@ const PurchasesTable: React.FC = () => {
         </Table.Column>
       </Table>
 
-      {showErrorLabel()}
-      {showSuccessfulLabel()}
+      {showErrorLabel(deleteStatus)}
+      {showSuccessfulLabel(deleteStatus)}
     </Card>
   );
 };
