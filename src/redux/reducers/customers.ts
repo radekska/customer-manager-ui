@@ -56,8 +56,3 @@ export function deleteCustomer(customerId: string) {
 }
 
 
-export enum CustomerListStatus {
-    IDLE = "idle",
-    LOADING = "loading",
-    FAILED = "failed",
-}

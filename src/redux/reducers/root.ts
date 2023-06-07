@@ -1,6 +1,7 @@
 import { AddStatus, DeleteStatus, ListStatus } from "../../enums";
 import { Customer } from "../../models/customer";
 import { Purchase } from "../../models/purchase";
+import { Repair } from "../../models/repair";
 
 type CustomersState = {
   entities: Customer[];
@@ -13,7 +14,18 @@ type PurchasesState = {
   purchaseAddStatus: AddStatus;
   purchaseDeleteStatus: DeleteStatus;
 };
-export type State = { customers: CustomersState; purchases: PurchasesState };
+
+type RepairsState = {
+  entities: Repair[];
+  repairsListStatus: ListStatus;
+  repairsAddStatus: AddStatus;
+  repairsDeleteStatus: DeleteStatus;
+};
+export type State = {
+  customers: CustomersState;
+  purchases: PurchasesState;
+  repairs: RepairsState;
+};
 
 const initialState: State = {
   customers: {
@@ -27,12 +39,17 @@ const initialState: State = {
     purchaseAddStatus: AddStatus.IDLE,
     purchaseDeleteStatus: DeleteStatus.IDLE,
   },
+  repairs: {
+    entities: [],
+    repairsListStatus: ListStatus.IDLE,
+    repairsAddStatus: AddStatus.IDLE,
+    repairsDeleteStatus: DeleteStatus.IDLE,
+  },
 };
 
 export default function rootReducer(state = initialState, action: any) {
   switch (action.type) {
     case "customers/customersLoading":
-      console.log(state, action);
       return {
         ...state,
         customers: {
@@ -52,7 +69,6 @@ export default function rootReducer(state = initialState, action: any) {
         },
       };
     case "customers/customersLoaded":
-      console.log(state, action);
       return {
         ...state,
         customers: {
@@ -62,7 +78,6 @@ export default function rootReducer(state = initialState, action: any) {
         },
       };
     case "customers/customerAddIdle":
-      console.log(state, action);
       return {
         ...state,
         customers: {
@@ -72,7 +87,6 @@ export default function rootReducer(state = initialState, action: any) {
         },
       };
     case "customers/customerAdding":
-      console.log(state, action);
       return {
         ...state,
         customers: {
@@ -82,7 +96,6 @@ export default function rootReducer(state = initialState, action: any) {
         },
       };
     case "customers/customerAddingFailed":
-      console.log(state, action);
       return {
         ...state,
         customers: {
@@ -92,7 +105,6 @@ export default function rootReducer(state = initialState, action: any) {
         },
       };
     case "customers/customerAddingSuccess":
-      console.log(state, action);
       return {
         ...state,
         customers: {
@@ -110,7 +122,6 @@ export default function rootReducer(state = initialState, action: any) {
         },
       };
     case "customers/customerDeleted":
-      console.log(state, action);
       return {
         ...state,
         customers: {
@@ -122,7 +133,6 @@ export default function rootReducer(state = initialState, action: any) {
         },
       };
     case "purchases/purchaseAddIdle":
-      console.log(state, action);
       return {
         ...state,
         purchases: {
@@ -133,7 +143,6 @@ export default function rootReducer(state = initialState, action: any) {
         },
       };
     case "purchases/purchaseAdding":
-      console.log(state, action);
       return {
         ...state,
         purchases: {
@@ -144,7 +153,6 @@ export default function rootReducer(state = initialState, action: any) {
         },
       };
     case "purchases/purchaseAddingFailed":
-      console.log(state, action);
       return {
         ...state,
         purchases: {
@@ -155,7 +163,6 @@ export default function rootReducer(state = initialState, action: any) {
         },
       };
     case "purchases/purchaseAddingSuccess":
-      console.log(state, action);
       return {
         ...state,
         purchases: {
@@ -180,7 +187,6 @@ export default function rootReducer(state = initialState, action: any) {
         },
       };
     case "purchases/purchaseDeleting":
-      console.log(state, action);
       return {
         ...state,
         purchases: {
@@ -191,7 +197,6 @@ export default function rootReducer(state = initialState, action: any) {
         },
       };
     case "purchases/purchaseDeletingFailed":
-      console.log(state, action);
       return {
         ...state,
         purchases: {
@@ -202,7 +207,6 @@ export default function rootReducer(state = initialState, action: any) {
         },
       };
     case "purchases/purchaseDeletingSuccess":
-      console.log(state, action);
       return {
         ...state,
         purchases: {
@@ -215,7 +219,6 @@ export default function rootReducer(state = initialState, action: any) {
         },
       };
     case "purchases/purchaseDeleteIdle":
-      console.log(state, action);
       return {
         ...state,
         purchases: {
@@ -226,7 +229,6 @@ export default function rootReducer(state = initialState, action: any) {
         },
       };
     case "purchases/purchasesLoading":
-      console.log(state, action);
       return {
         ...state,
         purchases: {
@@ -237,7 +239,6 @@ export default function rootReducer(state = initialState, action: any) {
         },
       };
     case "purchases/purchasesLoaded":
-      console.log(state, action);
       return {
         ...state,
         purchases: {

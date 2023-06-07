@@ -10,10 +10,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { ListStatus } from "../enums";
 import TrashIcon from "@rsuite/icons/Trash";
 import { showErrorLabel, showSuccessfulLabel } from "./Common";
+import { deleteRepair, listRepairs } from "../redux/reducers/repairs";
 
 const selectRepairs = (state: State) => state.repairs.entities;
-const selectListStatus = (state: State) => state.repairs.purchasesListStatus;
-const selectDeleteStatus = (state: State) => state.repairs.purchaseDeleteStatus;
+const selectListStatus = (state: State) => state.repairs.repairsListStatus;
+const selectDeleteStatus = (state: State) => state.repairs.repairsDeleteStatus;
 
 const AddRepairsButton: React.FC<{ customerId: string }> = ({ customerId }) => {
   const path = `/customers/${customerId}/repair/add`;
@@ -44,7 +45,7 @@ const RepairsTable: React.FC = () => {
     dispatch(listRepairsThunk);
   }, [customerId, dispatch]);
 
-  const purchases = useSelector(selectRepairs);
+  const repairs = useSelector(selectRepairs);
   const listStatus = useSelector(selectListStatus);
   const deleteStatus = useSelector(selectDeleteStatus);
 
@@ -56,36 +57,17 @@ const RepairsTable: React.FC = () => {
         loading={(() => {
           return listStatus === ListStatus.LOADING;
         })()}
-        data={purchases}
+        data={repairs}
+        locale={{ emptyMessage: "Brak danych" }}
       >
         <Table.Column align="center" fixed resizable>
-          <Table.HeaderCell>Moce szkieł</Table.HeaderCell>
-          <Table.Cell dataKey="lens_power" />
+          <Table.HeaderCell>Koszt</Table.HeaderCell>
+          <Table.Cell dataKey="cost" />
         </Table.Column>
 
         <Table.Column align="center" fixed resizable>
-          <Table.HeaderCell>Rodzaj szkieł</Table.HeaderCell>
-          <Table.Cell dataKey="lens_type" />
-        </Table.Column>
-
-        <Table.Column align="center" fixed resizable>
-          <Table.HeaderCell>Model oprawki</Table.HeaderCell>
-          <Table.Cell dataKey="frame_model" />
-        </Table.Column>
-
-        <Table.Column align="center" fixed resizable>
-          <Table.HeaderCell>PD</Table.HeaderCell>
-          <Table.Cell dataKey="pd" />
-        </Table.Column>
-
-        <Table.Column align="center" fixed resizable>
-          <Table.HeaderCell>Rodzaj zakupu</Table.HeaderCell>
-          <Table.Cell dataKey="purchase_type" />
-        </Table.Column>
-
-        <Table.Column align="center" fixed resizable>
-          <Table.HeaderCell>Data zakupu</Table.HeaderCell>
-          <Table.Cell dataKey="purchased_at" />
+          <Table.HeaderCell>Opis</Table.HeaderCell>
+          <Table.Cell dataKey="description" />
         </Table.Column>
 
         <Table.Column align="center" fixed>

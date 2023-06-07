@@ -86,6 +86,7 @@ const PurchasesTable: React.FC = () => {
           return listStatus === ListStatus.LOADING;
         })()}
         data={purchases}
+        locale={{"emptyMessage":"Brak danych"}}
       >
         <Table.Column align="center" fixed resizable>
           <Table.HeaderCell>Moce szkieł</Table.HeaderCell>

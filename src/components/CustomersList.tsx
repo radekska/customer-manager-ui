@@ -20,12 +20,10 @@ const CustomersList: React.FC = () => {
     value: string,
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const customerQuery = value;
+    const customerQuery = value.split(" ");
     const firstName = customerQuery[0] !== undefined ? customerQuery[0] : "";
     const lastName = customerQuery[1] !== undefined ? customerQuery[1] : "";
     const listCustomersThunk = listCustomers(firstName, lastName);
-
-    console.log(value, event);
 
     // @ts-ignore
     dispatch(listCustomersThunk);
