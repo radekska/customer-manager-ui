@@ -16,6 +16,7 @@ const selectListStatus = (state: State) => state.purchases.purchasesListStatus;
 const selectDeleteStatus = (state: State) =>
   state.purchases.purchaseDeleteStatus;
 
+
 const AddPurchaseButton: React.FC<{ customerId: string }> = ({
   customerId,
 }) => {

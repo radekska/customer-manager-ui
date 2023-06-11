@@ -18,8 +18,8 @@ type PurchasesState = {
 type RepairsState = {
   entities: Repair[];
   repairsListStatus: ListStatus;
-  repairsAddStatus: AddStatus;
-  repairsDeleteStatus: DeleteStatus;
+  repairAddStatus: AddStatus;
+  repairDeleteStatus: DeleteStatus;
 };
 export type State = {
   customers: CustomersState;
@@ -42,8 +42,8 @@ const initialState: State = {
   repairs: {
     entities: [],
     repairsListStatus: ListStatus.IDLE,
-    repairsAddStatus: AddStatus.IDLE,
-    repairsDeleteStatus: DeleteStatus.IDLE,
+    repairAddStatus: AddStatus.IDLE,
+    repairDeleteStatus: DeleteStatus.IDLE,
   },
 };
 
@@ -125,9 +125,7 @@ export default function rootReducer(state = initialState, action: any) {
       return {
         ...state,
         customers: {
-          entities: state.customers.entities.filter(
-            (customer) => customer.id !== action.payload
-          ),
+          entities: state.customers.entities.filter((customer) => customer.id !== action.payload),
           customerAddStatus: state.customers.customerAddStatus,
           customerListStatus: state.customers.customerListStatus,
         },
@@ -210,9 +208,7 @@ export default function rootReducer(state = initialState, action: any) {
       return {
         ...state,
         purchases: {
-          entities: state.purchases.entities.filter(
-            (purchase) => purchase.id !== action.payload
-          ),
+          entities: state.purchases.entities.filter((purchase) => purchase.id !== action.payload),
           purchasesListStatus: state.purchases.purchasesListStatus,
           purchaseAddStatus: state.purchases.purchaseAddStatus,
           purchaseDeleteStatus: DeleteStatus.SUCCESS,
@@ -246,6 +242,76 @@ export default function rootReducer(state = initialState, action: any) {
           purchasesListStatus: ListStatus.IDLE,
           purchaseAddStatus: AddStatus.IDLE,
           purchaseDeleteStatus: DeleteStatus.IDLE,
+        },
+      };
+    case "repairs/repairsLoading":
+      return {
+        ...state,
+        repairs: {
+          entities: state.repairs.entities,
+          repairsListStatus: ListStatus.LOADING,
+          repairAddStatus: AddStatus.IDLE,
+          repairDeleteStatus: DeleteStatus.IDLE,
+        },
+      };
+    case "repairs/repairsLoaded":
+      return {
+        ...state,
+        repairs: {
+          entities: action.payload,
+          repairsListStatus: ListStatus.IDLE,
+          repairAddStatus: AddStatus.IDLE,
+          repairDeleteStatus: DeleteStatus.IDLE,
+        },
+      };
+    case "repairs/repairAddIdle":
+      return {
+        ...state,
+        repairs: {
+          entities: state.repairs.entities,
+          repairsListStatus: state.repairs.repairsListStatus,
+          repairAddStatus: AddStatus.IDLE,
+          repairDeleteStatus: state.repairs.repairDeleteStatus,
+        },
+      };
+    case "repairs/repairAdding":
+      return {
+        ...state,
+        repairs: {
+          entities: state.repairs.entities,
+          repairsListStatus: state.repairs.repairsListStatus,
+          repairAddStatus: AddStatus.ADDING,
+          repairDeleteStatus: state.repairs.repairDeleteStatus,
+        },
+      };
+    case "repairs/repairAddingFailed":
+      return {
+        ...state,
+        repairs: {
+          entities: state.repairs.entities,
+          repairsListStatus: state.repairs.repairsListStatus,
+          repairAddStatus: AddStatus.FAILED,
+          repairDeleteStatus: state.repairs.repairDeleteStatus,
+        },
+      };
+    case "repairs/repairAddingSuccess":
+      return {
+        ...state,
+        repairs: {
+          entities: [
+            ...state.repairs.entities,
+            {
+              id: action.payload.id,
+              description: action.payload.description,
+              cost: action.payload.cost,
+              created_at: action.payload.created_at,
+              reported_at: action.payload.reported_at,
+              customer_id: action.payload.customer_id,
+            },
+          ],
+          repairsListStatus: state.repairs.repairsListStatus,
+          repairAddStatus: AddStatus.SUCCESS,
+          repairDeleteStatus: state.repairs.repairDeleteStatus,
         },
       };
     default:
