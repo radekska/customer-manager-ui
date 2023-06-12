@@ -1,8 +1,7 @@
 import axios from "axios";
 import { Repair } from "../../models/repair";
 
-// const origin = window.location.origin
-const origin = "http://localhost";
+const origin = window.location.origin;
 
 export function listRepairs(customerId: string) {
   return async function listRepairsThunk(dispatch: any, getState: any) {
