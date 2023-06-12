@@ -1,7 +1,9 @@
 import axios from "axios";
 import {Purchase} from "../../models/purchase";
 
-const origin = window.location.origin
+// const origin = window.location.origin
+const origin = "http://localhost"
+
 
 export function listPurchases(customerId: string) {
     return async function listPurchasesThunk(dispatch: any, getState: any) {
@@ -67,9 +69,4 @@ export function deletePurchase(customerId: string, purchaseId: string) {
         })
 
     }
-}
-export enum PurchasesListStatus {
-    IDLE = "idle",
-    LOADING = "loading",
-    FAILED = "failed",
 }

@@ -1,7 +1,8 @@
 import axios from "axios";
 import {Customer} from "../../models/customer";
 
-const domain = window.location.origin
+// const domain = window.location.origin
+const domain = "http://localhost"
 
 export function listCustomers(firstName: string = "", lastName: string = "") {
     return async function listCustomersThunk(dispatch: any, getState: any) {
@@ -54,22 +55,4 @@ export function deleteCustomer(customerId: string) {
     }
 }
 
-export enum AddStatus {
-    IDLE = "idle",
-    ADDING = "adding",
-    SUCCESS = "success",
-    FAILED = "failed",
-}
 
-export enum DeleteStatus {
-    IDLE = "idle",
-    DELETING = "deleting",
-    SUCCESS = "success",
-    FAILED = "failed",
-}
-
-export enum CustomerListStatus {
-    IDLE = "idle",
-    LOADING = "loading",
-    FAILED = "failed",
-}

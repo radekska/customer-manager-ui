@@ -1,38 +1,58 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "rsuite/dist/rsuite.min.css";
 import React from "react";
-import {Link, Route, Routes} from "react-router-dom";
-import {Card, Container, Navbar, Row} from "react-bootstrap";
+import { Link, Route, Routes } from "react-router-dom";
+import { Card, Container, Navbar, Row } from "react-bootstrap";
 import CustomersList from "./components/CustomersList";
 import CustomerDetails from "./components/CustomerDetails";
 import AddCustomer from "./components/AddCustomer";
 import AddPurchase from "./components/AddPurchase";
+import AddRepair from "./components/AddRepair";
 
 const App: React.FC = () => {
-    return (
-        <Container>
-            <Row>
-                <Navbar>
-                    <Link to="/"><Navbar.Brand>Panel Klientów</Navbar.Brand></Link>
-                </Navbar>
-            </Row>
-            <Card>
-                <Card.Body>
+  return (
+    <Container>
+      <Row>
+        <Navbar>
+          <Link to="/">
+            <Navbar.Brand>Panel Klientów</Navbar.Brand>
+          </Link>
+        </Navbar>
+      </Row>
+      <Card>
+        <Card.Body>
+          <Row>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <Container>
                     <Row>
-                        <Routes>
-                            <Route path="/"
-                                   element={<Container><Row><CustomersList/></Row></Container>}></Route>
-                            <Route path="/customers/:id"
-                                   element={
-                                       <Container><Row><CustomersList/><CustomerDetails/></Row></Container>}></Route>
-                            <Route path="/customer/add" element={<AddCustomer/>}></Route>
-                            <Route path="/customers/:id/purchase/add" element={<AddPurchase/>}></Route>
-                        </Routes>
+                      <CustomersList />
                     </Row>
-                </Card.Body>
-            </Card>
-        </Container>
-    );
-}
-
+                  </Container>
+                }
+              ></Route>
+              <Route
+                path="/customers/:id"
+                element={
+                  <Container>
+                    <Row>
+                      <CustomersList />
+                      <CustomerDetails />
+                    </Row>
+                  </Container>
+                }
+              ></Route>
+              <Route path="/customer/add" element={<AddCustomer />}></Route>
+              <Route path="/customers/:id/purchase/add" element={<AddPurchase />}></Route>
+              <Route path="/customers/:id/repair/add" element={<AddRepair />}></Route>
+            </Routes>
+          </Row>
+        </Card.Body>
+      </Card>
+    </Container>
+  );
+};
 
 export default App;
