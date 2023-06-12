@@ -314,6 +314,46 @@ export default function rootReducer(state = initialState, action: any) {
           repairDeleteStatus: state.repairs.repairDeleteStatus,
         },
       };
+    case "repairs/repairDeleting":
+      return {
+        ...state,
+        repairs: {
+          entities: state.repairs.entities,
+          repairsListStatus: state.repairs.repairsListStatus,
+          repairAddStatus: state.repairs.repairAddStatus,
+          repairDeleteStatus: DeleteStatus.DELETING,
+        },
+      };
+    case "repairs/repairDeletingFailed":
+      return {
+        ...state,
+        repairs: {
+          entities: state.repairs.entities,
+          repairsListStatus: state.repairs.repairsListStatus,
+          repairAddStatus: state.repairs.repairAddStatus,
+          repairDeleteStatus: DeleteStatus.FAILED,
+        },
+      };
+    case "repairs/repairDeletingSuccess":
+      return {
+        ...state,
+        repairs: {
+          entities: state.repairs.entities.filter((repair) => repair.id !== action.payload),
+          repairsListStatus: state.repairs.repairsListStatus,
+          repairAddStatus: state.repairs.repairAddStatus,
+          repairDeleteStatus: DeleteStatus.SUCCESS,
+        },
+      };
+    case "repairs/repairDeleteIdle":
+      return {
+        ...state,
+        repairs: {
+          entities: state.repairs.entities,
+          repairsListStatus: state.repairs.repairsListStatus,
+          repairAddStatus: state.repairs.repairAddStatus,
+          repairDeleteStatus: DeleteStatus.IDLE,
+        },
+      };
     default:
       return state;
   }

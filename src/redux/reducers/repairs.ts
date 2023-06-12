@@ -18,7 +18,7 @@ export function listRepairs(customerId: string) {
 
 export function deleteRepair(customerId: string, repairId: string) {
   return async function deleteRepairThunk(dispatch: any, getState: any) {
-    dispatch({ type: "repairs/repairsDeleting" });
+    dispatch({ type: "repairs/repairDeleting" });
     axios
       .delete<Repair>(`${origin}/api/customers/${customerId}/repairs/${repairId}`)
       .then((response) => {
