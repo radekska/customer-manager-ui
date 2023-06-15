@@ -1,111 +1,65 @@
-import React, { useRef } from "react";
-import Form from "react-bootstrap/Form";
-import { Card, Container } from "react-bootstrap";
-import Alert from "@mui/material/Alert";
-import { State } from "../redux/reducers/root";
-import { useDispatch, useSelector } from "react-redux";
-import { addCustomer } from "../redux/reducers/customers";
-import { IconButton } from "rsuite";
-import PlusIcon from "@rsuite/icons/Plus";
-import { AddStatus } from "../enums";
+import { SyntheticEvent, useState } from "react";
+import { Schema } from "rsuite";
+import { Form, Button } from "rsuite";
+import { object } from "schema-types";
 
-const selectAddStatus = (state: State) => state.customers.customerAddStatus;
+interface MyFormValues {
+  firstName: string;
+  lastName: string;
+  telephoneNumber: string;
+}
+
+const model = Schema.Model({
+  firstName: Schema.Types.StringType().isRequired("To pole jest wymagane."),
+  lastName: Schema.Types.StringType().isRequired("To pole jest wymagane."),
+  telephoneNumber: Schema.Types.StringType().isRequired("To pole jest wymagane."),
+});
 
 const AddCustomer: React.FC = () => {
-  const firstNameInputRef = useRef<HTMLInputElement>(null);
-  const lastNameInputRef = useRef<HTMLInputElement>(null);
-  const telephoneNumberInputRef = useRef<HTMLInputElement>(null);
+  const [formValue, setFormValue] = useState<object>({ firstName: "", lastName: "", telephoneNumber: "" });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [formError, setFormErrors] = useState<object>({});
 
-  const dispatch = useDispatch();
-  const clearInputFields = () => {
-    firstNameInputRef.current!.value = "";
-    lastNameInputRef.current!.value = "";
-    telephoneNumberInputRef.current!.value = "";
+  const handleChange = (formValue: object, event?: SyntheticEvent<Element, Event> | undefined) => {
+    console.log(formValue, "handleChange");
+    setFormValue(formValue);
   };
 
-  const addCustomerHandler = (event: React.FormEvent) => {
-    event.preventDefault();
-    // TODO - input validation
-    const firstName = firstNameInputRef.current!.value;
-    const lastName = lastNameInputRef.current!.value;
-    const telephoneNumber = telephoneNumberInputRef.current!.value;
-
-    const addCustomerThunk = addCustomer(firstName, lastName, telephoneNumber);
-    // @ts-ignore
-    dispatch(addCustomerThunk);
-    clearInputFields();
-  };
-
-  const addStatus = useSelector(selectAddStatus);
-  const showErrorLabel = () => {
-    if (addStatus === AddStatus.FAILED) {
-      return (
-        <Alert key="danger" severity="error">
-          Wystąpił błąd w dodawaniu klienta
-        </Alert>
-      );
+  const handleSubmit = () => {
+    setFormValue(formValue);
+    console.log(formValue, "handleSubmit");
+    console.log(formError, "hadnleSubmit");
+    if (Object.keys(formError).length === 0) {
+      return;
     }
   };
-  const showSuccessfulLabel = () => {
-    if (addStatus === AddStatus.SUCCESS) {
-      return (
-        <Alert key="success" severity="success">
-          Klient został dodany poprawnie
-        </Alert>
-      );
-    }
-  };
-
   return (
-    <Container>
-      <Card>
-        {showErrorLabel()}
-        {showSuccessfulLabel()}
-        <Card.Header>Dodaj nowego klienta</Card.Header>
-        <Form onSubmit={addCustomerHandler}>
-          <Card.Body>
-            <Form.Group className="mb-3">
-              <Form.Label>Imię</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Imię"
-                id="firstName"
-                ref={firstNameInputRef}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Nazwisko</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Nazwisko"
-                id="lastName"
-                ref={lastNameInputRef}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Numer telefonu</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Numer telefonu"
-                id="telephoneNumer"
-                ref={telephoneNumberInputRef}
-              />
-            </Form.Group>
-          </Card.Body>
-          <Card.Footer>
-            <IconButton
-              appearance="primary"
-              color="green"
-              icon={<PlusIcon />}
-              type="submit"
-            >
-              Dodaj
-            </IconButton>
-          </Card.Footer>
-        </Form>
-      </Card>
-    </Container>
+    <Form
+      fluid
+      onChange={handleChange}
+      onError={(data) => setFormErrors(data)}
+      formValue={formValue}
+      onSubmit={handleSubmit}
+      model={model}
+    >
+      <Form.Group>
+        <Form.ControlLabel>Imię</Form.ControlLabel>
+        <Form.Control name="firstName" placeholder="Imię" />
+      </Form.Group>
+      <Form.Group>
+        <Form.ControlLabel>Nazwisko</Form.ControlLabel>
+        <Form.Control name="lastName" errorMessage={errors.lastName} placeholder="Nazwisko" />
+      </Form.Group>
+      <Form.Group>
+        <Form.ControlLabel>Numer telefonu</Form.ControlLabel>
+        <Form.Control name="telephoneNumber" errorMessage={errors.telephoneNumber} placeholder="Numer telefonu" />
+      </Form.Group>
+      <Form.Group>
+        <Button type="submit" appearance="primary">
+          Submit
+        </Button>
+      </Form.Group>
+    </Form>
   );
 };
-
 export default AddCustomer;
