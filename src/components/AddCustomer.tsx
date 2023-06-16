@@ -1,7 +1,8 @@
-import { SyntheticEvent, useState } from "react";
-import { Schema } from "rsuite";
-import { Form, Button } from "rsuite";
-import { object } from "schema-types";
+import React, { useState } from "react";
+import { FormEvent, SyntheticEvent } from "react";
+import { IconButton, Schema } from "rsuite";
+import { Form } from "rsuite";
+import PlusIcon from "@rsuite/icons/Plus";
 
 interface MyFormValues {
   firstName: string;
@@ -12,33 +13,37 @@ interface MyFormValues {
 const model = Schema.Model({
   firstName: Schema.Types.StringType().isRequired("To pole jest wymagane."),
   lastName: Schema.Types.StringType().isRequired("To pole jest wymagane."),
-  telephoneNumber: Schema.Types.StringType().isRequired("To pole jest wymagane."),
+  telephoneNumber: Schema.Types.NumberType("To pole musi zawierać cyfry.").isRequired("To pole jest wymagane.")
 });
 
 const AddCustomer: React.FC = () => {
   const [formValue, setFormValue] = useState<object>({ firstName: "", lastName: "", telephoneNumber: "" });
-  const [errors, setErrors] = useState<Record<string, string>>({});
   const [formError, setFormErrors] = useState<object>({});
 
-  const handleChange = (formValue: object, event?: SyntheticEvent<Element, Event> | undefined) => {
-    console.log(formValue, "handleChange");
+  const handleChange = (formValue: object, _?: SyntheticEvent<Element, Event> | undefined) => {
     setFormValue(formValue);
   };
 
-  const handleSubmit = () => {
-    setFormValue(formValue);
-    console.log(formValue, "handleSubmit");
-    console.log(formError, "hadnleSubmit");
-    if (Object.keys(formError).length === 0) {
-      return;
+  const handleSubmit = (_: boolean, event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formValuesEmpty = Object.values(formValue).filter((value) => value !== "").length === 0;
+    const formErrorsFound = Object.keys(formError).length !== 0;
+    if (!formValuesEmpty && !formErrorsFound) {
+      console.log("wyślij dane");
     }
   };
+
+  const handleFormError = (errors: any) => {
+    setFormErrors(errors);
+  };
+
   return (
     <Form
       fluid
       onChange={handleChange}
-      onError={(data) => setFormErrors(data)}
+      onCheck={handleFormError}
       formValue={formValue}
+      formError={formError}
       onSubmit={handleSubmit}
       model={model}
     >
@@ -48,16 +53,16 @@ const AddCustomer: React.FC = () => {
       </Form.Group>
       <Form.Group>
         <Form.ControlLabel>Nazwisko</Form.ControlLabel>
-        <Form.Control name="lastName" errorMessage={errors.lastName} placeholder="Nazwisko" />
+        <Form.Control name="lastName" placeholder="Nazwisko" />
       </Form.Group>
       <Form.Group>
         <Form.ControlLabel>Numer telefonu</Form.ControlLabel>
-        <Form.Control name="telephoneNumber" errorMessage={errors.telephoneNumber} placeholder="Numer telefonu" />
+        <Form.Control name="telephoneNumber" placeholder="Numer telefonu" />
       </Form.Group>
       <Form.Group>
-        <Button type="submit" appearance="primary">
-          Submit
-        </Button>
+        <IconButton type="submit" appearance="primary" color="green" icon={<PlusIcon />}>
+          Dodaj klienta
+        </IconButton>
       </Form.Group>
     </Form>
   );
