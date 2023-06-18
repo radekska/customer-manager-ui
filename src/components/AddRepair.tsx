@@ -40,7 +40,7 @@ const AddRepair: React.FC = () => {
     const formValuesNotEmpty = Object.values(formValue).filter((value) => value === "").length === 0;
     const formErrorsFound = Object.keys(formError).length !== 0;
     if (formValuesNotEmpty && !formErrorsFound) {
-      const addRepairThunk = addRepair(customerId, formValue.description, formValue.cost, formValue.reportedAt);
+      const addRepairThunk = addRepair(customerId, formValue.description, Number(formValue.cost), formValue.reportedAt);
 
       // @ts-ignore
       dispatch(addRepairThunk);
