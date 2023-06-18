@@ -1,6 +1,6 @@
 import { Schema } from "rsuite";
 
-const RequiredString = Schema.Types.StringType().isRequired("To pole jest wymagane");
+const RequiredString = Schema.Types.StringType().isRequired("To pole jest wymagane.");
 
 export const addCustomerModelForm = Schema.Model({
   firstName: RequiredString,
@@ -14,5 +14,11 @@ export const addPurchaseModelForm = Schema.Model({
   pd: RequiredString,
   lensType: RequiredString,
   purchaseType: RequiredString,
+  purchasedAt: Schema.Types.DateType(),
+});
+
+export const addRepairModelForm = Schema.Model({
+  description: RequiredString,
+  cost: Schema.Types.NumberType("To pole musi być liczbą."),
   purchasedAt: Schema.Types.DateType(),
 });

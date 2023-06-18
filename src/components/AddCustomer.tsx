@@ -1,15 +1,14 @@
-import { selectAddCustomerStatus } from "../redux/selectors/customers";
-import { addCustomerModelForm } from "../validation/schemas";
-import React, { useState } from "react";
-import { FormEvent, SyntheticEvent } from "react";
-import { addCustomer } from "../redux/reducers/customers";
+import React, { FormEvent, SyntheticEvent, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Container from "rsuite/Container";
-import Header from "rsuite/Header";
 import Content from "rsuite/Content";
-import { AddMessageStatus } from "./AddMessageStatus";
 import Form from "rsuite/Form";
+import Header from "rsuite/Header";
+import { addCustomer } from "../redux/reducers/customers";
+import { selectAddCustomerStatus } from "../redux/selectors";
+import { addCustomerModelForm } from "../validation/schemas";
 import { AddButton } from "./AddButton";
+import { AddMessageStatus } from "./AddMessageStatus";
 
 const addCustomerTextMessageStatus = {
   success: "Klient został dodany poprawnie.",

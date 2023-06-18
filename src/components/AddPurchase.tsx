@@ -6,7 +6,7 @@ import Content from "rsuite/Content";
 import Form from "rsuite/Form";
 import Header from "rsuite/Header";
 import { addPurchase } from "../redux/reducers/purchases";
-import { selectAddPurchaseStatus } from "../redux/selectors/purchases";
+import { selectAddPurchaseStatus } from "../redux/selectors";
 import { addPurchaseModelForm } from "../validation/schemas";
 import { AddButton } from "./AddButton";
 import { AddMessageStatus } from "./AddMessageStatus";
