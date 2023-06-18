@@ -1,107 +1,109 @@
-import {State} from "../redux/reducers/root";
-import React, {useRef} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {addPurchase} from "../redux/reducers/purchases";
-import {useParams} from "react-router-dom";
-import Alert from "@mui/material/Alert";
-import {Card, Container, Form } from "react-bootstrap";
-import { AddStatus } from "../enums";
-
-const selectAddStatus = (state: State) => state.purchases.purchaseAddStatus
+import React, { FormEvent, SyntheticEvent, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import Container from "rsuite/Container";
+import Content from "rsuite/Content";
+import Form from "rsuite/Form";
+import Header from "rsuite/Header";
+import { addPurchase } from "../redux/reducers/purchases";
+import { selectAddCustomerStatus } from "../redux/selectors/customers";
+import { addPurchaseModelForm } from "../validation/schemas";
+import { AddButton } from "./AddButton";
+import { AddMessageStatus } from "./AddMessageStatus";
+const addPurchaseTextMessageStatus = {
+  success: "Zakup został dodany poprawnie.",
+  failed: "Wystąpił błąd w dodawaniu zakupu.",
+  adding: "Trwa dodawanie zakupu.",
+};
 
 const AddPurchase: React.FC = () => {
-    const customerId = useParams().id!
+  const customerId = useParams().id!;
+  const defaultFormValues = {
+    frameModel: "",
+    lensPower: "",
+    pd: "",
+    lensType: "",
+    purchaseType: "",
+    purchasedAt: "",
+  };
+  const [formValue, setFormValue] = useState<any>(defaultFormValues);
+  const [formError, setFormErrors] = useState<object>({});
+  const dispatch = useDispatch();
 
-    const frameModelInputRef = useRef<HTMLInputElement>(null)
-    const lensPowerInputRef = useRef<HTMLInputElement>(null)
-    const pdInputRef = useRef<HTMLInputElement>(null)
-    const lensTypeInputRef = useRef<HTMLInputElement>(null)
-    const purchaseTypeInputRef = useRef<HTMLInputElement>(null)
-    const purchasedAtInputRef = useRef<HTMLInputElement>(null)
+  const handleChange = (formValue: object, _?: SyntheticEvent<Element, Event> | undefined) => {
+    setFormValue(formValue);
+  };
+  const handleFormError = (errors: any) => {
+    setFormErrors(errors);
+  };
 
-    const dispatch = useDispatch()
+  const handleSubmit = (_: boolean, event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formValuesEmpty = Object.values(formValue).filter((value) => value !== "").length === 0;
+    const formErrorsFound = Object.keys(formError).length !== 0;
+    if (!formValuesEmpty && !formErrorsFound) {
+      const addPurchaseThunk = addPurchase(
+        customerId,
+        formValue.frameModel,
+        formValue.lensPower,
+        formValue.lensType,
+        formValue.pd,
+        formValue.purchaseType,
+        formValue.purchasedAt
+      );
 
-    const clearInputFields = () => {
-        frameModelInputRef.current!.value = ""
-        lensPowerInputRef.current!.value = ""
-        pdInputRef.current!.value = ""
-        lensTypeInputRef.current!.value = ""
-        purchaseTypeInputRef.current!.value = ""
-        purchasedAtInputRef.current!.value = ""
+      // @ts-ignore
+      dispatch(addPurchaseThunk);
+      setFormValue(defaultFormValues);
     }
+  };
 
+  return (
+    <Container>
+      <Header>
+        <AddMessageStatus addStatus={useSelector(selectAddCustomerStatus)} message={addPurchaseTextMessageStatus} />
+      </Header>
+      <Content>
+        <Form
+          fluid
+          onChange={handleChange}
+          onCheck={handleFormError}
+          formValue={formValue}
+          formError={formError}
+          onSubmit={handleSubmit}
+          model={addPurchaseModelForm}
+        >
+          <Form.Group className="mb-3">
+            <Form.ControlLabel>Model oprawki</Form.ControlLabel>
+            <Form.Control name="frameModel" placeholder="Model oprawki" />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.ControlLabel>Moce soczewek</Form.ControlLabel>
+            <Form.Control name="lensPower" placeholder="Moce soczewek" />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.ControlLabel>PD</Form.ControlLabel>
+            <Form.Control name="pd" placeholder="PD" />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.ControlLabel>Typ soczewek</Form.ControlLabel>
+            <Form.Control name="lensType" placeholder="Typ soczewek" />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.ControlLabel>Rodzaj zakupu</Form.ControlLabel>
+            <Form.Control name="purchaseType" placeholder="Rodzaj zakupu" />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.ControlLabel>Data zakupu</Form.ControlLabel>
+            <Form.Control name="purchasedAt" type="date" placeholder="Data zakupu" />
+          </Form.Group>
+          <Form.Group>
+            <AddButton text="Dodaj zakup" />
+          </Form.Group>
+        </Form>
+      </Content>
+    </Container>
+  );
+};
 
-    const addPurchaseHandler = (event: React.FormEvent) => {
-        event.preventDefault()
-        // TODO - input validation
-        const frameModel = frameModelInputRef.current!.value
-        const lensPower = lensPowerInputRef.current!.value
-        const pd = pdInputRef.current!.value
-        const lensType = lensTypeInputRef.current!.value
-        const purchaseType = purchaseTypeInputRef.current!.value
-        const purchasedAt = purchasedAtInputRef.current!.value
-
-
-        const addPurchaseThunk = addPurchase(customerId, frameModel, lensPower, pd, lensType, purchaseType, purchasedAt)
-
-        // @ts-ignore
-        dispatch(addPurchaseThunk)
-        clearInputFields()
-
-    }
-
-    const addStatus = useSelector(selectAddStatus)
-    const showErrorLabel = () => {
-        if (addStatus === AddStatus.FAILED) {
-            return <Alert key="danger" severity="error">Wystąpił błąd w dodawaniu zakupu</Alert>
-        }
-    }
-    const showSuccessfulLabel = () => {
-        if (addStatus === AddStatus.SUCCESS) {
-            return <Alert key="success" severity="success">Zakup został dodany poprawnie</Alert>
-        }
-    }
-    return (
-        <Container>
-            <Card>
-                {showErrorLabel()}
-                {showSuccessfulLabel()}
-                <Card.Header>Dodaj nowy zakup</Card.Header>
-                <Form onSubmit={addPurchaseHandler}>
-                    <Card.Body>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Model oprawki</Form.Label>
-                            <Form.Control type="text" placeholder="Model oprawki" ref={frameModelInputRef}/>
-                        </Form.Group>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Moce soczewek</Form.Label>
-                            <Form.Control type="text" placeholder="Moce soczewek" ref={lensPowerInputRef}/>
-                        </Form.Group>
-                        <Form.Group className="mb-3">
-                            <Form.Label>PD</Form.Label>
-                            <Form.Control type="text" placeholder="PD" ref={pdInputRef}/>
-                        </Form.Group>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Typ soczewek</Form.Label>
-                            <Form.Control type="text" placeholder="Typ soczewek" ref={lensTypeInputRef}/>
-                        </Form.Group>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Rodzaj zakupu</Form.Label>
-                            <Form.Control type="text" placeholder="Rodzaj zakupu" ref={purchaseTypeInputRef}/>
-                        </Form.Group>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Data zakupu</Form.Label>
-                            <Form.Control type="date" placeholder="Data zakupu" ref={purchasedAtInputRef}/>
-                        </Form.Group>
-                    </Card.Body>
-                    <Card.Footer>
-                        <button type="submit" className="btn btn-primary">Dodaj zakup</button>
-                    </Card.Footer>
-                </Form>
-            </Card>
-        </Container>
-    )
-}
-
-
-export default AddPurchase
+export default AddPurchase;
