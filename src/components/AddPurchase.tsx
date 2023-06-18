@@ -6,10 +6,11 @@ import Content from "rsuite/Content";
 import Form from "rsuite/Form";
 import Header from "rsuite/Header";
 import { addPurchase } from "../redux/reducers/purchases";
-import { selectAddCustomerStatus } from "../redux/selectors/customers";
+import { selectAddPurchaseStatus } from "../redux/selectors/purchases";
 import { addPurchaseModelForm } from "../validation/schemas";
 import { AddButton } from "./AddButton";
 import { AddMessageStatus } from "./AddMessageStatus";
+
 const addPurchaseTextMessageStatus = {
   success: "Zakup został dodany poprawnie.",
   failed: "Wystąpił błąd w dodawaniu zakupu.",
@@ -39,9 +40,9 @@ const AddPurchase: React.FC = () => {
 
   const handleSubmit = (_: boolean, event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formValuesEmpty = Object.values(formValue).filter((value) => value !== "").length === 0;
+    const formValuesNotEmpty = Object.values(formValue).filter((value) => value === "").length === 0;
     const formErrorsFound = Object.keys(formError).length !== 0;
-    if (!formValuesEmpty && !formErrorsFound) {
+    if (formValuesNotEmpty && !formErrorsFound) {
       const addPurchaseThunk = addPurchase(
         customerId,
         formValue.frameModel,
@@ -61,7 +62,7 @@ const AddPurchase: React.FC = () => {
   return (
     <Container>
       <Header>
-        <AddMessageStatus addStatus={useSelector(selectAddCustomerStatus)} message={addPurchaseTextMessageStatus} />
+        <AddMessageStatus addStatus={useSelector(selectAddPurchaseStatus)} message={addPurchaseTextMessageStatus} />
       </Header>
       <Content>
         <Form
