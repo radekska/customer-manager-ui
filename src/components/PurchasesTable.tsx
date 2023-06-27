@@ -10,6 +10,7 @@ import { HeaderCell } from "rsuite-table";
 import TrashIcon from "@rsuite/icons/Trash";
 import PlusIcon from "@rsuite/icons/Plus";
 import { DeleteStatus, ListStatus } from "../enums";
+import { AddButton } from "./AddButton";
 
 const selectPurchases = (state: State) => state.purchases.entities;
 const selectListStatus = (state: State) => state.purchases.purchasesListStatus;
@@ -23,11 +24,7 @@ const AddPurchaseButton: React.FC<{ customerId: string }> = ({
   const path = `/customers/${customerId}/purchase/add`;
   return (
     <Link to={path}>
-      <IconButton
-        appearance="primary"
-        icon={<PlusIcon />}
-        color="green"
-      ></IconButton>
+      <AddButton text="Dodaj zakup"/>
     </Link>
   );
 };

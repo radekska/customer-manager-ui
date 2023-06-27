@@ -1,111 +1,79 @@
-import React, { useRef } from "react";
-import Form from "react-bootstrap/Form";
-import { Card, Container } from "react-bootstrap";
-import Alert from "@mui/material/Alert";
-import { State } from "../redux/reducers/root";
+import React, { FormEvent, SyntheticEvent, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Container from "rsuite/Container";
+import Content from "rsuite/Content";
+import Form from "rsuite/Form";
+import Header from "rsuite/Header";
 import { addCustomer } from "../redux/reducers/customers";
-import { IconButton } from "rsuite";
-import PlusIcon from "@rsuite/icons/Plus";
-import { AddStatus } from "../enums";
+import { selectAddCustomerStatus } from "../redux/selectors";
+import { addCustomerModelForm } from "../validation/schemas";
+import { AddButton } from "./AddButton";
+import { AddMessageStatus } from "./AddMessageStatus";
 
-const selectAddStatus = (state: State) => state.customers.customerAddStatus;
+const addCustomerTextMessageStatus = {
+  success: "Klient został dodany poprawnie.",
+  failed: "Wystąpił błąd w dodawaniu klienta.",
+  adding: "Trwa dodawanie klienta.",
+};
 
 const AddCustomer: React.FC = () => {
-  const firstNameInputRef = useRef<HTMLInputElement>(null);
-  const lastNameInputRef = useRef<HTMLInputElement>(null);
-  const telephoneNumberInputRef = useRef<HTMLInputElement>(null);
-
+  const [formValue, setFormValue] = useState<any>({ firstName: "", lastName: "", telephoneNumber: "" });
+  const [formError, setFormErrors] = useState<object>({});
   const dispatch = useDispatch();
-  const clearInputFields = () => {
-    firstNameInputRef.current!.value = "";
-    lastNameInputRef.current!.value = "";
-    telephoneNumberInputRef.current!.value = "";
+
+  const handleChange = (formValue: object, _?: SyntheticEvent<Element, Event> | undefined) => {
+    setFormValue(formValue);
+  };
+  const handleFormError = (errors: any) => {
+    setFormErrors(errors);
   };
 
-  const addCustomerHandler = (event: React.FormEvent) => {
+  const handleSubmit = (_: boolean, event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // TODO - input validation
-    const firstName = firstNameInputRef.current!.value;
-    const lastName = lastNameInputRef.current!.value;
-    const telephoneNumber = telephoneNumberInputRef.current!.value;
+    const formValuesEmpty = Object.values(formValue).filter((value) => value !== "").length === 0;
+    const formErrorsFound = Object.keys(formError).length !== 0;
+    if (!formValuesEmpty && !formErrorsFound) {
+      const addCustomerThunk = addCustomer(formValue.firstName, formValue.lastName, formValue.telephoneNumber);
 
-    const addCustomerThunk = addCustomer(firstName, lastName, telephoneNumber);
-    // @ts-ignore
-    dispatch(addCustomerThunk);
-    clearInputFields();
-  };
-
-  const addStatus = useSelector(selectAddStatus);
-  const showErrorLabel = () => {
-    if (addStatus === AddStatus.FAILED) {
-      return (
-        <Alert key="danger" severity="error">
-          Wystąpił błąd w dodawaniu klienta
-        </Alert>
-      );
-    }
-  };
-  const showSuccessfulLabel = () => {
-    if (addStatus === AddStatus.SUCCESS) {
-      return (
-        <Alert key="success" severity="success">
-          Klient został dodany poprawnie
-        </Alert>
-      );
+      // @ts-ignore
+      dispatch(addCustomerThunk);
+      setFormValue({ firstName: "", lastName: "", telephoneNumber: "" });
     }
   };
 
   return (
     <Container>
-      <Card>
-        {showErrorLabel()}
-        {showSuccessfulLabel()}
-        <Card.Header>Dodaj nowego klienta</Card.Header>
-        <Form onSubmit={addCustomerHandler}>
-          <Card.Body>
-            <Form.Group className="mb-3">
-              <Form.Label>Imię</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Imię"
-                id="firstName"
-                ref={firstNameInputRef}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Nazwisko</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Nazwisko"
-                id="lastName"
-                ref={lastNameInputRef}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Numer telefonu</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Numer telefonu"
-                id="telephoneNumer"
-                ref={telephoneNumberInputRef}
-              />
-            </Form.Group>
-          </Card.Body>
-          <Card.Footer>
-            <IconButton
-              appearance="primary"
-              color="green"
-              icon={<PlusIcon />}
-              type="submit"
-            >
-              Dodaj
-            </IconButton>
-          </Card.Footer>
+      <Header>
+        <AddMessageStatus addStatus={useSelector(selectAddCustomerStatus)} message={addCustomerTextMessageStatus} />
+      </Header>
+      <Content>
+        <Form
+          fluid
+          onChange={handleChange}
+          onCheck={handleFormError}
+          formValue={formValue}
+          formError={formError}
+          onSubmit={handleSubmit}
+          model={addCustomerModelForm}
+        >
+          <Form.Group>
+            <Form.ControlLabel>Imię</Form.ControlLabel>
+            <Form.Control name="firstName" placeholder="Imię" />
+          </Form.Group>
+          <Form.Group>
+            <Form.ControlLabel>Nazwisko</Form.ControlLabel>
+            <Form.Control name="lastName" placeholder="Nazwisko" />
+          </Form.Group>
+          <Form.Group>
+            <Form.ControlLabel>Numer telefonu</Form.ControlLabel>
+            <Form.Control name="telephoneNumber" placeholder="Numer telefonu" />
+          </Form.Group>
+          <Form.Group>
+            <AddButton text="Dodaj klienta" />
+          </Form.Group>
         </Form>
-      </Card>
+      </Content>
     </Container>
   );
 };
-
 export default AddCustomer;

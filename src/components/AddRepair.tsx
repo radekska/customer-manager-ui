@@ -1,92 +1,86 @@
-import { State } from "../redux/reducers/root";
-import React, { useRef } from "react";
+import React, { FormEvent, SyntheticEvent, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addRepair } from "../redux/reducers/repairs";
 import { useParams } from "react-router-dom";
-import Alert from "@mui/material/Alert";
-import { Card, Container, Form } from "react-bootstrap";
-import { AddStatus } from "../enums";
+import Container from "rsuite/Container";
+import Content from "rsuite/Content";
+import Form from "rsuite/Form";
+import Header from "rsuite/Header";
+import { addRepair } from "../redux/reducers/repairs";
+import { selectAddRepairStatus } from "../redux/selectors";
+import { addRepairModelForm } from "../validation/schemas";
+import { AddButton } from "./AddButton";
+import { AddMessageStatus } from "./AddMessageStatus";
 
-const selectAddStatus = (state: State) => state.repairs.repairAddStatus;
+const addRepairTextMessageStatus = {
+  success: "Wpis został dodany poprawnie.",
+  failed: "Wystąpił błąd w dodawaniu wpisu.",
+  adding: "Trwa dodawanie wpisu.",
+};
 
 const AddRepair: React.FC = () => {
   const customerId = useParams().id!;
-
-  const descriptionInputRef = useRef<HTMLInputElement>(null);
-  const costInputRef = useRef<HTMLInputElement>(null);
-  const reportedAtInputRef = useRef<HTMLInputElement>(null);
-
+  const defaultFormValues = {
+    description: "",
+    cost: 0.0,
+    reportedAt: "",
+  };
+  const [formValue, setFormValue] = useState<any>(defaultFormValues);
+  const [formError, setFormErrors] = useState<object>({});
   const dispatch = useDispatch();
 
-  const clearInputFields = () => {
-    descriptionInputRef.current!.value = "";
-    costInputRef.current!.value = "";
-    reportedAtInputRef.current!.value = "";
+  const handleChange = (formValue: object, _?: SyntheticEvent<Element, Event> | undefined) => {
+    setFormValue(formValue);
+  };
+  const handleFormError = (errors: any) => {
+    setFormErrors(errors);
   };
 
-  const addRepairHandler = (event: React.FormEvent) => {
+  const handleSubmit = (_: boolean, event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // TODO - input validation
-    const description = descriptionInputRef.current!.value;
-    const cost = Number(costInputRef.current!.value);
-    const reportedAt = reportedAtInputRef.current!.value;
+    const formValuesNotEmpty = Object.values(formValue).filter((value) => value === "").length === 0;
+    const formErrorsFound = Object.keys(formError).length !== 0;
+    if (formValuesNotEmpty && !formErrorsFound) {
+      const addRepairThunk = addRepair(customerId, formValue.description, Number(formValue.cost), formValue.reportedAt);
 
-    const addRepairThunk = addRepair(customerId, description, cost, reportedAt);
-
-    // @ts-ignore
-    dispatch(addRepairThunk);
-    clearInputFields();
-  };
-
-  const addStatus = useSelector(selectAddStatus);
-  const showErrorLabel = () => {
-    if (addStatus === AddStatus.FAILED) {
-      return (
-        <Alert key="danger" severity="error">
-          Wystąpił błąd w dodawaniu wpisu
-        </Alert>
-      );
+      // @ts-ignore
+      dispatch(addRepairThunk);
+      setFormValue(defaultFormValues);
     }
   };
-  const showSuccessfulLabel = () => {
-    if (addStatus === AddStatus.SUCCESS) {
-      return (
-        <Alert key="success" severity="success">
-          Wpis został dodany poprawnie
-        </Alert>
-      );
-    }
-  };
+
   return (
     <Container>
-      <Card>
-        {showErrorLabel()}
-        {showSuccessfulLabel()}
-        <Card.Header>Dodaj nowy zakup</Card.Header>
-        <Form onSubmit={addRepairHandler}>
-          <Card.Body>
-            <Form.Group className="mb-3">
-              <Form.Label>Opis</Form.Label>
-              <Form.Control type="text" placeholder="Opis" ref={descriptionInputRef} />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Koszt</Form.Label>
-              <Form.Control type="text" placeholder="Koszt" ref={costInputRef} />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Data zakupu</Form.Label>
-              <Form.Control type="date" placeholder="Data zakupu" ref={reportedAtInputRef} />
-            </Form.Group>
-          </Card.Body>
-          <Card.Footer>
-            <button type="submit" className="btn btn-primary">
-              Dodaj wpis
-            </button>
-          </Card.Footer>
+      <Header>
+        <AddMessageStatus addStatus={useSelector(selectAddRepairStatus)} message={addRepairTextMessageStatus} />
+      </Header>
+      <Content>
+        <Form
+          fluid
+          onChange={handleChange}
+          onCheck={handleFormError}
+          formValue={formValue}
+          formError={formError}
+          onSubmit={handleSubmit}
+          model={addRepairModelForm}
+        >
+          <Form.Group>
+            <Form.ControlLabel>Opis</Form.ControlLabel>
+            <Form.Control name="description" placeholder="Opis" />
+          </Form.Group>
+          <Form.Group>
+            <Form.ControlLabel>Koszt</Form.ControlLabel>
+            <Form.Control name="cost" placeholder="Koszt" />
+          </Form.Group>
+          <Form.Group>
+            <Form.ControlLabel>Data zgłoszenia</Form.ControlLabel>
+            <Form.Control type="date" name="reportedAt" placeholder="Data zgłoszenia" />
+          </Form.Group>
+          <Form.Group>
+            <AddButton text="Dodaj wpis" />
+          </Form.Group>
         </Form>
-      </Card>
+      </Content>
     </Container>
   );
 };
-
 export default AddRepair;
