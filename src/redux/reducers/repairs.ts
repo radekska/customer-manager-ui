@@ -49,6 +49,7 @@ export function deleteRepair(customerId: string, repairId: string) {
 }
 
 export function addRepair(customerId: string, description: string, cost: Number, reportedAt: string) {
+export function addRepair(customerId: string, description: string, cost: string, reportedAt: string) {
   return async function addRepairThunk(dispatch: any, getState: any) {
     dispatch({ type: "repairs/repairAdding" });
     axios
