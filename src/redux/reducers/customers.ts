@@ -1,13 +1,12 @@
 import axios from "axios";
 import { Customer } from "../../models/customer";
 
+const domain = window.location.origin;
 
-export function listCustomers(firstName: string = "", lastName: string = "") {
 export function listCustomers(firstName: string = "", lastName: string = "", offset: Number = 0, limit: Number = 10) {
   return async function listCustomersThunk(dispatch: any, getState: any) {
     dispatch({ type: "customers/customersLoading" });
     axios
-      .get<Customer[]>(`${domain}/api/customers?firstName=${firstName}&lastName=${lastName}`)
       .get<Customer[]>(`${domain}/api/customers?firstName=${firstName}&lastName=${lastName}&offset=${offset}&limit=${limit}`)
       .then((response) =>
         dispatch({
