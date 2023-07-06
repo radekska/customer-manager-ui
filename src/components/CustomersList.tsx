@@ -17,7 +17,7 @@ const selectListStatus = (state: State) => state.customers.customerListStatus;
 
 const CustomersList: React.FC = () => {
   const dispatch = useDispatch();
-  const [activePage, setActivePage] = useState(5);
+  const [activePage, setActivePage] = useState(1);
   const getCustomersListHandler = (value: string, event: React.ChangeEvent<HTMLInputElement>) => {
     const customerQuery = value.split(" ");
     const firstName = customerQuery[0] !== undefined ? customerQuery[0] : "";
