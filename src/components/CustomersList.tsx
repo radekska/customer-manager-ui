@@ -1,25 +1,24 @@
-import { Card, Col, Stack } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { IconButton, List, Message } from "rsuite";
-import PlusIcon from "@rsuite/icons/Plus";
-import { State } from "../redux/reducers/root";
-import { listCustomers } from "../redux/reducers/customers";
 import { CircularProgress } from "@mui/material";
-import { Input, InputGroup } from "rsuite";
+import PlusIcon from "@rsuite/icons/Plus";
 import SearchIcon from "@rsuite/icons/Search";
+import { useState } from "react";
+import { Card, Col, Stack } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { IconButton, Input, InputGroup, List, Message } from "rsuite";
+import Container from "rsuite/Container";
+import Pagination from "rsuite/Pagination";
 import { ListStatus } from "../enums";
+import { listCustomers } from "../redux/reducers/customers";
+import { State } from "../redux/reducers/root";
 
 const selectCustomers = (state: State) => state.customers.entities;
 const selectListStatus = (state: State) => state.customers.customerListStatus;
 
 const CustomersList: React.FC = () => {
   const dispatch = useDispatch();
-
-  const getCustomersListHandler = (
-    value: string,
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const [activePage, setActivePage] = useState(5);
+  const getCustomersListHandler = (value: string, event: React.ChangeEvent<HTMLInputElement>) => {
     const customerQuery = value.split(" ");
     const firstName = customerQuery[0] !== undefined ? customerQuery[0] : "";
     const lastName = customerQuery[1] !== undefined ? customerQuery[1] : "";
@@ -27,6 +26,16 @@ const CustomersList: React.FC = () => {
 
     // @ts-ignore
     dispatch(listCustomersThunk);
+    setActivePage(1);
+  };
+
+  const getPaginatedCustomersListHandler = (page: number) => {
+    const limit = 15;
+    const offset = (page - 1) * limit;
+    const listCustomersThunk = listCustomers("", "", offset, limit);
+    // @ts-ignore
+    dispatch(listCustomersThunk);
+    setActivePage(page);
   };
 
   const customers = useSelector(selectCustomers);
@@ -41,15 +50,14 @@ const CustomersList: React.FC = () => {
   function renderCustomersList() {
     if (customers.length > 0) {
       return customers.map((customer) => (
-        <Link
-          to={`/customers/${customer.id}`}
-          key={customer.id}
-          style={{ textDecoration: "none", color: "black" }}
-        >
-          <List.Item>
-            {customer.first_name} {customer.last_name}
-          </List.Item>
-        </Link>
+        <Container>
+          {" "}
+          <Link to={`/customers/${customer.id}`} key={customer.id} style={{ textDecoration: "none", color: "black" }}>
+            <List.Item>
+              {customer.first_name} {customer.last_name}
+            </List.Item>
+          </Link>
+        </Container>
       ));
     }
     return (
@@ -65,19 +73,26 @@ const CustomersList: React.FC = () => {
         <Card.Body>
           <Stack gap={3}>
             <InputGroup>
-              <Input
-                onChange={getCustomersListHandler}
-                placeholder="Wyszukaj klientów"
-              />
+              <Input onChange={getCustomersListHandler} placeholder="Wyszukaj klientów" />
               <InputGroup.Addon>
                 <SearchIcon />
               </InputGroup.Addon>
             </InputGroup>
-
             <List bordered hover>
               {renderLoader()}
               {renderCustomersList()}
             </List>
+            <Pagination
+              prev
+              last
+              next
+              first
+              // size="lg"
+              total={100}
+              limit={10}
+              activePage={activePage}
+              onChangePage={getPaginatedCustomersListHandler}
+            />
           </Stack>
         </Card.Body>
         <Card.Footer>
