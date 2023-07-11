@@ -1,8 +1,8 @@
 import axios from "axios";
 import { Customer } from "../../models/customer";
 
-// const domain = window.location.origin;
-const domain = "http://localhost:8080"
+const domain = window.location.origin;
+
 export function listCustomers(firstName: string = "", lastName: string = "", offset: Number = 0, limit: Number = 10) {
   return async function listCustomersThunk(dispatch: any, getState: any) {
     dispatch({ type: "customers/customersLoading" });
