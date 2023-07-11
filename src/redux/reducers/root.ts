@@ -5,6 +5,7 @@ import { Repair } from "../../models/repair";
 
 type CustomersState = {
   entities: Customer[];
+  total: number;
   customerListStatus: ListStatus;
   customerAddStatus: AddStatus;
 };
@@ -30,6 +31,7 @@ export type State = {
 const initialState: State = {
   customers: {
     entities: [],
+    total: 0,
     customerListStatus: ListStatus.IDLE,
     customerAddStatus: AddStatus.IDLE,
   },
@@ -54,6 +56,7 @@ export default function rootReducer(state = initialState, action: any) {
         ...state,
         customers: {
           entities: state.customers.entities,
+          total: state.customers.total,
           customerAddStatus: state.customers.customerAddStatus,
           customerListStatus: ListStatus.LOADING,
         },
@@ -64,6 +67,7 @@ export default function rootReducer(state = initialState, action: any) {
         ...state,
         customers: {
           entities: state.customers.entities,
+          total: state.customers.total,
           customerAddStatus: state.customers.customerAddStatus,
           customerListStatus: ListStatus.FAILED,
         },
@@ -72,7 +76,8 @@ export default function rootReducer(state = initialState, action: any) {
       return {
         ...state,
         customers: {
-          entities: action.payload,
+          entities: action.payload.data,
+          total: action.payload.total,
           customerAddStatus: state.customers.customerAddStatus,
           customerListStatus: ListStatus.IDLE,
         },
@@ -82,6 +87,7 @@ export default function rootReducer(state = initialState, action: any) {
         ...state,
         customers: {
           entities: state.customers.entities,
+          total: state.customers.total,
           customerAddStatus: AddStatus.IDLE,
           customerListStatus: state.customers.customerListStatus,
         },
@@ -91,6 +97,7 @@ export default function rootReducer(state = initialState, action: any) {
         ...state,
         customers: {
           entities: [...state.customers.entities],
+          total: state.customers.total,
           customerAddStatus: AddStatus.ADDING,
           customerListStatus: state.customers.customerListStatus,
         },
@@ -100,6 +107,7 @@ export default function rootReducer(state = initialState, action: any) {
         ...state,
         customers: {
           entities: [...state.customers.entities],
+          total: state.customers.total,
           customerAddStatus: AddStatus.FAILED,
           customerListStatus: state.customers.customerListStatus,
         },
@@ -117,6 +125,7 @@ export default function rootReducer(state = initialState, action: any) {
               telephone_number: action.payload.telephone_number,
             },
           ],
+          total: state.customers.total + 1,
           customerAddStatus: AddStatus.SUCCESS,
           customerListStatus: state.customers.customerListStatus,
         },
@@ -126,6 +135,7 @@ export default function rootReducer(state = initialState, action: any) {
         ...state,
         customers: {
           entities: state.customers.entities.filter((customer) => customer.id !== action.payload),
+          total: state.customers.total - 1,
           customerAddStatus: state.customers.customerAddStatus,
           customerListStatus: state.customers.customerListStatus,
         },
