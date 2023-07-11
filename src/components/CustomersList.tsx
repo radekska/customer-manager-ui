@@ -13,32 +13,44 @@ import { listCustomers } from "../redux/reducers/customers";
 import { State } from "../redux/reducers/root";
 
 const selectCustomers = (state: State) => state.customers.entities;
+const selectCustomersTotal = (state: State) => state.customers.total;
 const selectListStatus = (state: State) => state.customers.customerListStatus;
 
 const CustomersList: React.FC = () => {
   const dispatch = useDispatch();
   const [activePage, setActivePage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [offset, setOffset] = useState(0);
+
   const getCustomersListHandler = (value: string, event: React.ChangeEvent<HTMLInputElement>) => {
     const customerQuery = value.split(" ");
     const firstName = customerQuery[0] !== undefined ? customerQuery[0] : "";
     const lastName = customerQuery[1] !== undefined ? customerQuery[1] : "";
-    const listCustomersThunk = listCustomers(firstName, lastName);
+    const listCustomersThunk = listCustomers(firstName, lastName, offset, limit);
 
     // @ts-ignore
     dispatch(listCustomersThunk);
     setActivePage(1);
   };
 
-  const getPaginatedCustomersListHandler = (page: number) => {
-    const limit = 15;
+  const onChangePageHandler = (page: number) => {
     const offset = (page - 1) * limit;
+    setOffset(offset);
     const listCustomersThunk = listCustomers("", "", offset, limit);
     // @ts-ignore
     dispatch(listCustomersThunk);
     setActivePage(page);
   };
 
+  const onChangeLimitHandler = (limit: number) => {
+    setLimit(limit);
+    const listCustomersThunk = listCustomers("", "", offset, limit);
+    // @ts-ignore
+    dispatch(listCustomersThunk);
+  };
+
   const customers = useSelector(selectCustomers);
+  const customersTotal = useSelector(selectCustomersTotal);
   const listStatus = useSelector(selectListStatus);
 
   function renderLoader() {
@@ -87,11 +99,13 @@ const CustomersList: React.FC = () => {
               last
               next
               first
-              // size="lg"
-              total={100}
-              limit={10}
+              total={customersTotal}
+              limit={limit}
+              limitOptions={[10, 15, 20]}
               activePage={activePage}
-              onChangePage={getPaginatedCustomersListHandler}
+              layout={["pager", "limit"]}
+              onChangePage={onChangePageHandler}
+              onChangeLimit={onChangeLimitHandler}
             />
           </Stack>
         </Card.Body>
