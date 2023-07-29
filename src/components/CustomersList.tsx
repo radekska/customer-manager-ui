@@ -80,7 +80,7 @@ const CustomersList: React.FC = () => {
   }
 
   return (
-    <Col md="auto">
+    <Col md={3} >
       <Card>
         <Card.Body>
           <Stack gap={3}>

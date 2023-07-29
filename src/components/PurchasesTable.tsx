@@ -1,33 +1,18 @@
-import React, { useEffect } from "react";
-import { State } from "../redux/reducers/root";
-import { Link, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { deletePurchase, listPurchases } from "../redux/reducers/purchases";
-import { Card } from "react-bootstrap";
 import Alert from "@mui/material/Alert";
-import { Table, IconButton } from "rsuite";
-import { HeaderCell } from "rsuite-table";
 import TrashIcon from "@rsuite/icons/Trash";
-import PlusIcon from "@rsuite/icons/Plus";
+import React, { useEffect } from "react";
+import { Card } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { IconButton, Table } from "rsuite";
+import { HeaderCell } from "rsuite-table";
 import { DeleteStatus, ListStatus } from "../enums";
-import { AddButton } from "./AddButton";
+import { deletePurchase, listPurchases } from "../redux/reducers/purchases";
+import { State } from "../redux/reducers/root";
 
 const selectPurchases = (state: State) => state.purchases.entities;
 const selectListStatus = (state: State) => state.purchases.purchasesListStatus;
-const selectDeleteStatus = (state: State) =>
-  state.purchases.purchaseDeleteStatus;
-
-
-const AddPurchaseButton: React.FC<{ customerId: string }> = ({
-  customerId,
-}) => {
-  const path = `/customers/${customerId}/purchase/add`;
-  return (
-    <Link to={path}>
-      <AddButton text="Dodaj zakup"/>
-    </Link>
-  );
-};
+const selectDeleteStatus = (state: State) => state.purchases.purchaseDeleteStatus;
 
 const showErrorLabel = (deleteStatus: DeleteStatus) => {
   if (deleteStatus === DeleteStatus.FAILED) {
@@ -57,10 +42,7 @@ const PurchasesTable: React.FC = () => {
   };
   const deletePurchaseHandler = (purchaseId: any) => {
     console.log(purchaseId);
-    const deletePurchaseThunk = deletePurchase(
-      customerId,
-      purchaseId.toString()
-    );
+    const deletePurchaseThunk = deletePurchase(customerId, purchaseId.toString());
     // @ts-ignore
     dispatch(deletePurchaseThunk);
   };
@@ -77,41 +59,41 @@ const PurchasesTable: React.FC = () => {
 
   return (
     <Card>
-      <AddPurchaseButton customerId={customerId} />
       <Table
         bordered
         loading={(() => {
           return listStatus === ListStatus.LOADING;
         })()}
         data={purchases}
-        locale={{"emptyMessage":"Brak danych"}}
+        locale={{ emptyMessage: "Brak danych" }}
+        wordWrap={true}
       >
-        <Table.Column align="center" fixed resizable>
+        <Table.Column align="center" fixed resizable fullText={true} width={200}>
           <Table.HeaderCell>Moce szkieł</Table.HeaderCell>
           <Table.Cell dataKey="lens_power" />
         </Table.Column>
 
-        <Table.Column align="center" fixed resizable>
+        <Table.Column align="center" fixed resizable fullText={true} width={200}>
           <Table.HeaderCell>Rodzaj szkieł</Table.HeaderCell>
           <Table.Cell dataKey="lens_type" />
         </Table.Column>
 
-        <Table.Column align="center" fixed resizable>
+        <Table.Column align="center" fixed resizable fullText={true} width={200}>
           <Table.HeaderCell>Model oprawki</Table.HeaderCell>
           <Table.Cell dataKey="frame_model" />
         </Table.Column>
 
-        <Table.Column align="center" fixed resizable>
+        <Table.Column align="center" fixed resizable fullText={true} width={200}>
           <Table.HeaderCell>PD</Table.HeaderCell>
           <Table.Cell dataKey="pd" />
         </Table.Column>
 
-        <Table.Column align="center" fixed resizable>
+        <Table.Column align="center" fixed resizable fullText={true} width={200}>
           <Table.HeaderCell>Rodzaj zakupu</Table.HeaderCell>
           <Table.Cell dataKey="purchase_type" />
         </Table.Column>
 
-        <Table.Column align="center" fixed resizable>
+        <Table.Column align="center" fixed resizable fullText={true} width={200}>
           <Table.HeaderCell>Data zakupu</Table.HeaderCell>
           <Table.Cell dataKey="purchased_at" />
         </Table.Column>

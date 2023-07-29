@@ -1,25 +1,27 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import "rsuite/dist/rsuite.min.css";
 import React from "react";
-import { Link, Route, Routes } from "react-router-dom";
 import { Card, Container, Navbar, Row } from "react-bootstrap";
-import CustomersList from "./components/CustomersList";
-import CustomerDetails from "./components/CustomerDetails";
+import { Link, Route, Routes } from "react-router-dom";
+import "rsuite/dist/rsuite.min.css";
 import AddCustomer from "./components/AddCustomer";
 import AddPurchase from "./components/AddPurchase";
 import AddRepair from "./components/AddRepair";
+import CustomerDetails from "./components/CustomerDetails";
+import CustomersList from "./components/CustomersList";
 
 const App: React.FC = () => {
   return (
-    <Container>
-      <Row>
-        <Navbar>
-          <Link to="/">
-            <Navbar.Brand>Panel Klientów</Navbar.Brand>
-          </Link>
-        </Navbar>
-      </Row>
+    <Container fluid={true}>
       <Card>
+        <Card.Header>
+          <Row>
+            <Navbar>
+              <Link to="/">
+                <Navbar.Brand>Panel Klientów</Navbar.Brand>
+              </Link>
+            </Navbar>
+          </Row>
+        </Card.Header>
         <Card.Body>
           <Row>
             <Routes>

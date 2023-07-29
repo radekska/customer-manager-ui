@@ -1,28 +1,18 @@
-import { showErrorLabel, showSuccessfulLabel } from "./Common";
-import { deleteRepair, listRepairs } from "../redux/reducers/repairs";
-import React, { useEffect } from "react";
-import { State } from "../redux/reducers/root";
-import { Link, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { Card } from "react-bootstrap";
-import { Table, IconButton } from "rsuite";
-import { HeaderCell } from "rsuite-table";
 import TrashIcon from "@rsuite/icons/Trash";
-import PlusIcon from "@rsuite/icons/Plus";
+import React, { useEffect } from "react";
+import { Card } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { IconButton, Table } from "rsuite";
+import { HeaderCell } from "rsuite-table";
 import { ListStatus } from "../enums";
+import { deleteRepair, listRepairs } from "../redux/reducers/repairs";
+import { State } from "../redux/reducers/root";
+import { showErrorLabel, showSuccessfulLabel } from "./Common";
 
 const selectRepairs = (state: State) => state.repairs.entities;
 const selectListStatus = (state: State) => state.repairs.repairsListStatus;
 const selectDeleteStatus = (state: State) => state.repairs.repairDeleteStatus;
-
-const AddRepairsButton: React.FC<{ customerId: string }> = ({ customerId }) => {
-  const path = `/customers/${customerId}/repair/add`;
-  return (
-    <Link to={path}>
-      <IconButton appearance="primary" icon={<PlusIcon />} color="green"></IconButton>
-    </Link>
-  );
-};
 
 const RepairsTable: React.FC = () => {
   const customerId = useParams().id!;
@@ -46,7 +36,6 @@ const RepairsTable: React.FC = () => {
 
   return (
     <Card>
-      <AddRepairsButton customerId={customerId} />
       <Table
         bordered
         loading={(() => {
@@ -54,18 +43,19 @@ const RepairsTable: React.FC = () => {
         })()}
         data={repairs}
         locale={{ emptyMessage: "Brak danych" }}
+        wordWrap={true}
       >
-        <Table.Column align="center" resizable>
+        <Table.Column align="center" fixed resizable fullText={true} width={200}>
           <Table.HeaderCell>Opis</Table.HeaderCell>
           <Table.Cell dataKey="description" />
         </Table.Column>
 
-        <Table.Column align="center" resizable >
+        <Table.Column align="center" fixed resizable fullText={true} width={200}>
           <Table.HeaderCell>Koszt</Table.HeaderCell>
           <Table.Cell dataKey="cost" />
         </Table.Column>
 
-        <Table.Column align="center" resizable >
+        <Table.Column align="center" fixed resizable fullText={true} width={200}>
           <Table.HeaderCell>Data zgłoszenia</Table.HeaderCell>
           <Table.Cell dataKey="reported_at" />
         </Table.Column>

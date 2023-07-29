@@ -1,16 +1,17 @@
+import Alert from "@mui/material/Alert";
 import React from "react";
 import { Card, Col } from "react-bootstrap";
-import { useParams } from "react-router-dom";
-import DeleteCustomer from "./DeleteCustomer";
 import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import { State } from "../redux/reducers/root";
+import AddPurchaseButton from "./AddPurchaseButton";
+import AddRepairButton from "./AddRepairButton";
+import DeleteCustomer from "./DeleteCustomer";
 import PurchasesTable from "./PurchasesTable";
-import Alert from "@mui/material/Alert";
 import RepairsTable from "./RepairsTable";
 
 function selectCustomerById(customerId: string) {
-  return (state: State) =>
-    state.customers.entities.find((customer) => customer.id === customerId);
+  return (state: State) => state.customers.entities.find((customer) => customer.id === customerId);
 }
 
 const CustomerDetails: React.FC = () => {
@@ -34,18 +35,33 @@ const CustomerDetails: React.FC = () => {
   return (
     <Col>
       <Card>
-        <Card.Body>
-          <Card.Title>Dane Klienta</Card.Title>
-          <Card.Text>Imię: {customer.first_name}</Card.Text>
-          <Card.Text>Nazwisko: {customer.last_name}</Card.Text>
-          <Card.Text>Numer telefonu: {customer.telephone_number}</Card.Text>
-        </Card.Body>
-        <Card.Body>
-          <Card.Title>Zakupy</Card.Title>
-          <PurchasesTable />
-          <Card.Title>Reklamacje i Naprawy</Card.Title>
-          <RepairsTable />
-        </Card.Body>
+        <Card>
+          <Card.Header>Dane Klienta</Card.Header>
+          <Card.Body>
+            <Card.Text>Imię: {customer.first_name}</Card.Text>
+            <Card.Text>Nazwisko: {customer.last_name}</Card.Text>
+            <Card.Text>Numer telefonu: {customer.telephone_number}</Card.Text>
+          </Card.Body>
+        </Card>
+        <Card>
+          <Card.Header>Zakupy</Card.Header>
+          <Card.Body>
+            <PurchasesTable />
+          </Card.Body>
+          <Card.Footer>
+            <AddPurchaseButton customerId={customerId} />
+          </Card.Footer>
+        </Card>
+        <Card>
+          <Card.Header>Reklamacje i Naprawy</Card.Header>
+          <Card.Body>
+            <RepairsTable />
+          </Card.Body>
+          <Card.Footer>
+            <AddRepairButton customerId={customerId} />
+          </Card.Footer>
+        </Card>
+
         <Card.Footer>
           <DeleteCustomer />
         </Card.Footer>
