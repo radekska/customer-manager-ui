@@ -45,22 +45,22 @@ const RepairsTable: React.FC = () => {
         locale={{ emptyMessage: "Brak danych" }}
         wordWrap={true}
       >
-        <Table.Column align="center" fixed resizable fullText={true} width={200}>
+        <Table.Column align="center" resizable fullText={true} width={200}>
           <Table.HeaderCell>Opis</Table.HeaderCell>
           <Table.Cell dataKey="description" />
         </Table.Column>
 
-        <Table.Column align="center" fixed resizable fullText={true} width={200}>
+        <Table.Column align="center" resizable fullText={true} width={200}>
           <Table.HeaderCell>Koszt</Table.HeaderCell>
           <Table.Cell dataKey="cost" />
         </Table.Column>
 
-        <Table.Column align="center" fixed resizable fullText={true} width={200}>
+        <Table.Column align="center" resizable fullText={true} width={200}>
           <Table.HeaderCell>Data zgłoszenia</Table.HeaderCell>
           <Table.Cell dataKey="reported_at" />
         </Table.Column>
 
-        <Table.Column align="center" fixed>
+        <Table.Column align="center">
           <HeaderCell> </HeaderCell>
           <Table.Cell style={{ padding: "6px" }}>
             {(rowData) => (

@@ -68,37 +68,37 @@ const PurchasesTable: React.FC = () => {
         locale={{ emptyMessage: "Brak danych" }}
         wordWrap={true}
       >
-        <Table.Column align="center" fixed resizable fullText={true} width={200}>
+        <Table.Column align="center" resizable fullText={true} width={200}>
           <Table.HeaderCell>Moce szkieł</Table.HeaderCell>
           <Table.Cell dataKey="lens_power" />
         </Table.Column>
 
-        <Table.Column align="center" fixed resizable fullText={true} width={200}>
+        <Table.Column align="center" resizable fullText={true} width={200}>
           <Table.HeaderCell>Rodzaj szkieł</Table.HeaderCell>
           <Table.Cell dataKey="lens_type" />
         </Table.Column>
 
-        <Table.Column align="center" fixed resizable fullText={true} width={200}>
+        <Table.Column align="center" resizable fullText={true} width={200}>
           <Table.HeaderCell>Model oprawki</Table.HeaderCell>
           <Table.Cell dataKey="frame_model" />
         </Table.Column>
 
-        <Table.Column align="center" fixed resizable fullText={true} width={200}>
+        <Table.Column align="center" resizable fullText={true} width={200}>
           <Table.HeaderCell>PD</Table.HeaderCell>
           <Table.Cell dataKey="pd" />
         </Table.Column>
 
-        <Table.Column align="center" fixed resizable fullText={true} width={200}>
+        <Table.Column align="center" resizable fullText={true} width={200}>
           <Table.HeaderCell>Rodzaj zakupu</Table.HeaderCell>
           <Table.Cell dataKey="purchase_type" />
         </Table.Column>
 
-        <Table.Column align="center" fixed resizable fullText={true} width={200}>
+        <Table.Column align="center" resizable fullText={true} width={200}>
           <Table.HeaderCell>Data zakupu</Table.HeaderCell>
           <Table.Cell dataKey="purchased_at" />
         </Table.Column>
 
-        <Table.Column align="center" fixed>
+        <Table.Column align="center">
           <HeaderCell> </HeaderCell>
           <Table.Cell style={{ padding: "6px" }}>
             {(rowData) => (
