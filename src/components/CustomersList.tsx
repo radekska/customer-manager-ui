@@ -107,6 +107,7 @@ const CustomersList: React.FC = () => {
               onChangePage={onChangePageHandler}
               onChangeLimit={onChangeLimitHandler}
             />
+            Całkowita liczba klientów: {customersTotal}
           </Stack>
         </Card.Body>
         <Card.Footer>
